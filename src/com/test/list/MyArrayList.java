@@ -7,9 +7,11 @@ import java.util.ListIterator;
 
 public class MyArrayList<E> implements List<E> {
 
+    private int size;
+
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
