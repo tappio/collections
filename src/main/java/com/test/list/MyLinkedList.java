@@ -2,7 +2,7 @@ package com.test.list;
 
 import java.util.*;
 
-public class MyLinkedList<E> implements List<E>, Deque<E> {
+public class MyLinkedList<E> implements List<E> {
 
     private static class Node<E> {
         Node<E> previous;
@@ -67,126 +67,6 @@ public class MyLinkedList<E> implements List<E>, Deque<E> {
     }
 
     @Override
-    public void addFirst(E e) {
-        linkFirst(e);
-    }
-
-    @Override
-    public void addLast(E e) {
-        linkLast(e);
-    }
-
-    @Override
-    public boolean offerFirst(E e) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean offerLast(E e) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public E removeFirst() {
-        Node<E> firstNode = first;
-        if (firstNode == null) return null;
-        return unlink(firstNode);
-    }
-
-    @Override
-    public E removeLast() {
-        Node<E> lastNode = last;
-        if (lastNode == null) return null;
-        return unlink(lastNode);
-    }
-
-    @Override
-    public E pollFirst() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public E pollLast() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public E getFirst() {
-        if (first == null) {
-            throw new NoSuchElementException();
-        }
-        return first.item;
-    }
-
-    @Override
-    public E getLast() {
-        if (last == null) {
-            throw new NoSuchElementException();
-        }
-        return last.item;
-    }
-
-    @Override
-    public E peekFirst() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public E peekLast() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean removeFirstOccurrence(Object o) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean removeLastOccurrence(Object o) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean offer(E e) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public E remove() {
-        return removeFirst();
-    }
-
-    @Override
-    public E poll() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public E element() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public E peek() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void push(E e) {
-        addFirst(e);
-    }
-
-    @Override
-    public E pop() {
-        return removeFirst();
-    }
-
-    @Override
-    public Iterator<E> descendingIterator() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public int size() {
         return size;
     }
@@ -203,7 +83,7 @@ public class MyLinkedList<E> implements List<E>, Deque<E> {
 
     @Override
     public Iterator<E> iterator() {
-        throw new UnsupportedOperationException();
+        return new MyLinkedListIterator<E>();
     }
 
     @Override
@@ -217,9 +97,19 @@ public class MyLinkedList<E> implements List<E>, Deque<E> {
         return result;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <T> T[] toArray(T[] a) {
-        throw new UnsupportedOperationException();
+        if (a.length < size) {
+            return (T[]) toArray();
+        }
+
+        int index = 0;
+        for (Node<E> node = first; node != null; node = node.next) {
+            a[index] = (T) node.item;
+            index++;
+        }
+        return a;
     }
 
     @Override
@@ -240,12 +130,21 @@ public class MyLinkedList<E> implements List<E>, Deque<E> {
 
     @Override
     public boolean containsAll(Collection<?> c) {
-        throw new UnsupportedOperationException();
+        for (Object o : c) {
+            if (!contains(o)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
     public boolean addAll(Collection<? extends E> c) {
-        throw new UnsupportedOperationException();
+        if (c == null || c.size() == 0)
+            return false;
+        for (E e : c)
+            linkLast(e);
+        return true;
     }
 
     @Override
@@ -255,7 +154,16 @@ public class MyLinkedList<E> implements List<E>, Deque<E> {
 
     @Override
     public boolean removeAll(Collection<?> c) {
-        throw new UnsupportedOperationException();
+        if (c == null || c.size() == 0)
+            return false;
+
+        for (Object o : c) {
+            Node<E> node = nodeOf(o);
+            if (node != null) {
+                unlink(node);
+            }
+        }
+        return true;
     }
 
     @Override
@@ -265,6 +173,13 @@ public class MyLinkedList<E> implements List<E>, Deque<E> {
 
     @Override
     public void clear() {
+        for (Node<E> current = first; current != null; ) {
+            Node<E> next = current.next;
+            current.item = null;
+            current.next = null;
+            current.previous = null;
+            current = next;
+        }
         first = null;
         last = null;
         size = 0;
@@ -295,16 +210,14 @@ public class MyLinkedList<E> implements List<E>, Deque<E> {
         int index = 0;
         if (o == null) {
             for (Node<E> node = first; node != null; node = node.next) {
-                if (node.item == null) {
+                if (node.item == null)
                     return index;
-                }
                 index++;
             }
         } else {
             for (Node<E> node = first; node != null; node = node.next) {
-                if (o.equals(node.item)) {
+                if (o.equals(node.item))
                     return index;
-                }
                 index++;
             }
         }
@@ -314,11 +227,13 @@ public class MyLinkedList<E> implements List<E>, Deque<E> {
     private Node<E> nodeOf(Object o) {
         if (o == null) {
             for (Node<E> node = first; node != null; node = node.next) {
-                if (node.item == null) return node;
+                if (node.item == null)
+                    return node;
             }
         } else {
             for (Node<E> node = first; node != null; node = node.next) {
-                if (o.equals(node.item)) return node;
+                if (o.equals(node.item))
+                    return node;
             }
         }
         return null;
@@ -342,6 +257,46 @@ public class MyLinkedList<E> implements List<E>, Deque<E> {
     @Override
     public List<E> subList(int fromIndex, int toIndex) {
         throw new UnsupportedOperationException();
+    }
+
+    private class MyLinkedListIterator<E> implements Iterator<E> {
+
+        Node<E> current;
+        Node lastReturned;
+
+        @SuppressWarnings("unchecked")
+        MyLinkedListIterator() {
+            current = (Node<E>) first;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return current != null;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public E next() {
+            if (current == null) {
+                throw new NoSuchElementException();
+            }
+
+            lastReturned = current;
+            current = current.next;
+            return (E) lastReturned.item;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public void remove() {
+            if (lastReturned == null) {
+                throw new IllegalStateException();
+            }
+
+            MyLinkedList.this.unlink(lastReturned);
+            current = lastReturned;
+            lastReturned = null;
+        }
     }
 
     @Override
