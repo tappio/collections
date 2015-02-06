@@ -85,8 +85,10 @@ public class MyArrayListTest {
         for (Object object : objects) {
             assertEquals(true, iterator.hasNext());
             assertEquals(object, iterator.next());
+            iterator.remove();
         }
         assertEquals(false, iterator.hasNext());
+        assertEquals(0, list.size());
     }
 
     @Test

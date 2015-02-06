@@ -294,7 +294,6 @@ public class MyLinkedList<E> implements List<E> {
             }
 
             MyLinkedList.this.unlink(lastReturned);
-            current = lastReturned;
             lastReturned = null;
         }
     }
