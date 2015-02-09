@@ -46,11 +46,6 @@ public class MyHashSet<E> extends MyAbstractCollection<E> implements Set<E> {
     }
 
     @Override
-    public boolean isEmpty() {
-        return size == 0;
-    }
-
-    @Override
     public boolean contains(Object o) {
         return nodeOf(o) != null;
     }
@@ -111,7 +106,6 @@ public class MyHashSet<E> extends MyAbstractCollection<E> implements Set<E> {
     }
 
     @Override
-    // TODO: This method must be refactored.
     public boolean remove(Object o) {
         if (!contains(o)) {
             return false;
@@ -125,78 +119,54 @@ public class MyHashSet<E> extends MyAbstractCollection<E> implements Set<E> {
             return true;
         }
 
-        Node prev = null;
-        if (o == null) {
-            for (Node start = head; start != null; start = start.next) {
-                if (start.value == null) {
-                    if (prev == null) {
-                        table[index] = start.next;
-                        size--;
-                        return true;
-                    }
-
-                    if (start.next == null) {
-                        prev.next = null;
-                        size--;
-                        return true;
-                    }
-
-                    prev.next = start.next;
-                    size--;
-                    return true;
-
-                } else {
-                    prev = start;
-                }
-            }
-        }
-
-        int hashCode = o.hashCode();
-        Node previous = null;
-        for (Node start = head; start != null; start = start.next) {
-            if (hashCode == start.hashCode && o.equals(start.value)) {
-                if (previous == null) {
-                    table[index] = start.next;
-                    size--;
-                    return true;
-                }
-
-                if (start.next == null) {
-                    previous.next = null;
-                    size--;
-                    return true;
-                }
-
-                previous.next = start.next;
-                size--;
-                return true;
-
-            } else {
-                previous = start;
-            }
-        }
-
-        return false;
-    }
-
-    @Override
-    public boolean containsAll(Collection<?> c) {
-        throw new UnsupportedOperationException();
+        if (o == null)
+            return removeNull();
+        else
+            return removeElement(o, index);
     }
 
     @Override
     public boolean addAll(Collection<? extends E> c) {
-        throw new UnsupportedOperationException();
+        if (c == null || c.isEmpty())
+            return false;
+
+        for (E e : c) {
+            add(e);
+        }
+        return true;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public boolean retainAll(Collection<?> c) {
-        throw new UnsupportedOperationException();
+        if (c == null || c.isEmpty())
+            return false;
+
+        final Object[] result = new Object[size];
+        int index = 0;
+        for (Object o : c) {
+            if (contains(o)) {
+                result[index] = o;
+                index++;
+            }
+        }
+
+        clear();
+        for (int i = 0; i < index; i++) {
+            add((E) result[i]);
+        }
+        return true;
     }
 
     @Override
     public boolean removeAll(Collection<?> c) {
-        throw new UnsupportedOperationException();
+        if (c == null || c.isEmpty())
+            return false;
+
+        for (Object o : c) {
+            remove(o);
+        }
+        return true;
     }
 
     @SuppressWarnings("unchecked")
@@ -267,6 +237,47 @@ public class MyHashSet<E> extends MyAbstractCollection<E> implements Set<E> {
         table = newTable;
     }
 
+    private boolean removeElement(Object o, int index) {
+        int hashCode = o.hashCode();
+        Node previous = null;
+        for (Node current = table[index]; current != null; current = current.next) {
+            if (hashCode == current.hashCode && o.equals(current.value)) {
+                if (previous == null) {
+                    table[index] = current.next;
+                } else if (current.next == null) {
+                    previous.next = null;
+                } else {
+                    previous.next = current.next;
+                }
+                size--;
+                return true;
+            } else {
+                previous = current;
+            }
+        }
+        return false;
+    }
+
+    private boolean removeNull() {
+        Node previous = null;
+        for (Node current = table[0]; current != null; current = current.next) {
+            if (current.value == null) {
+                if (previous == null) {
+                    table[0] = current.next;
+                } else if (current.next == null) {
+                    previous.next = null;
+                } else {
+                    previous.next = current.next;
+                }
+                size--;
+                return true;
+            } else {
+                previous = current;
+            }
+        }
+        return false;
+    }
+
     private class MyHashSetIterator<E> implements Iterator<E> {
 
         Node<E> current;
@@ -277,6 +288,13 @@ public class MyHashSet<E> extends MyAbstractCollection<E> implements Set<E> {
         MyHashSetIterator() {
             if (size != 0) {
                 current = table[position];
+                while (current == null) {
+                    position++;
+                    if (position < capacity)
+                        current = table[position];
+                    else
+                        break;
+                }
             }
         }
 
