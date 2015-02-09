@@ -1,8 +1,10 @@
 package com.test.set;
 
+import com.test.MyAbstractCollection;
+
 import java.util.*;
 
-public class MyHashSet<E> implements Set<E> {
+public class MyHashSet<E> extends MyAbstractCollection<E> implements Set<E> {
 
     private static class Node<E> {
         E value;
@@ -294,7 +296,7 @@ public class MyHashSet<E> implements Set<E> {
             current = current.next;
             while (current == null) {
                 position++;
-                if (position < size)
+                if (position < capacity)
                     current = table[position];
                 else
                     break;
@@ -311,25 +313,6 @@ public class MyHashSet<E> implements Set<E> {
             MyHashSet.this.remove(lastReturned.value);
             lastReturned = null;
         }
-    }
-
-    @Override
-    public String toString() {
-        Iterator<E> it = iterator();
-        if (!it.hasNext()) {
-            return "[]";
-        }
-
-        final StringBuilder builder = new StringBuilder();
-        builder.append('[');
-        while (it.hasNext()) {
-            builder.append(it.next());
-            if (it.hasNext()) {
-                builder.append(", ");
-            }
-        }
-        builder.append(']');
-        return builder.toString();
     }
 
 }

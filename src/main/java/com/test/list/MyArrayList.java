@@ -1,8 +1,10 @@
 package com.test.list;
 
+import com.test.MyAbstractCollection;
+
 import java.util.*;
 
-public class MyArrayList<E> implements List<E> {
+public class MyArrayList<E> extends MyAbstractCollection<E> implements List<E> {
 
     private static final Object[] EMPTY_ARRAY = new Object[0];
     private static final int DEFAULT_CAPACITY = 10;
@@ -24,11 +26,6 @@ public class MyArrayList<E> implements List<E> {
     @Override
     public int size() {
         return size;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return size == 0;
     }
 
     @Override
@@ -76,16 +73,6 @@ public class MyArrayList<E> implements List<E> {
             return false;
         }
         remove(index);
-        return true;
-    }
-
-    @Override
-    public boolean containsAll(Collection<?> c) {
-        for (Object o : c) {
-            if (!contains(o)) {
-                return false;
-            }
-        }
         return true;
     }
 
@@ -303,48 +290,4 @@ public class MyArrayList<E> implements List<E> {
         }
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == this)
-            return true;
-        if (!(o instanceof List))
-            return false;
-
-        Iterator<E> e1 = iterator();
-        Iterator e2 = ((List) o).iterator();
-        while (e1.hasNext() && e2.hasNext()) {
-            E o1 = e1.next();
-            Object o2 = e2.next();
-            if (!(o1==null ? o2==null : o1.equals(o2)))
-                return false;
-        }
-        return !(e1.hasNext() || e2.hasNext());
-    }
-
-    @Override
-    public int hashCode() {
-        int hashCode = 1;
-        for (E e : this)
-            hashCode = 31*hashCode + (e==null ? 0 : e.hashCode());
-        return hashCode;
-    }
-
-    @Override
-    public String toString() {
-        Iterator<E> it = iterator();
-        if (!it.hasNext()) {
-            return "[]";
-        }
-
-        final StringBuilder builder = new StringBuilder();
-        builder.append('[');
-        while (it.hasNext()) {
-            builder.append(it.next());
-            if (it.hasNext()) {
-                builder.append(", ");
-            }
-        }
-        builder.append(']');
-        return builder.toString();
-    }
 }

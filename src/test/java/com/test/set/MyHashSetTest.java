@@ -3,7 +3,10 @@ package com.test.set;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Iterator;
 import java.util.Set;
+
+import static org.junit.Assert.assertEquals;
 
 public class MyHashSetTest {
 
@@ -45,7 +48,7 @@ public class MyHashSetTest {
 
     @Test
     public void testIterator() throws Exception {
-        /*Object[] objects = set.toArray();
+        Object[] objects = set.toArray();
         Iterator<String> iterator = set.iterator();
         for (Object object : objects) {
             assertEquals(true, iterator.hasNext());
@@ -53,16 +56,7 @@ public class MyHashSetTest {
             iterator.remove();
         }
         assertEquals(false, iterator.hasNext());
-        assertEquals(0, list.size());*/
-
-        System.out.println(set);
-        int index = 1;
-        for (String s : set) {
-            System.out.println(index + ": " + s);
-            index++;
-        }
-        System.out.println(set);
-
+        assertEquals(0, set.size());
     }
 
     @Test
