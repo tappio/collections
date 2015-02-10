@@ -1,11 +1,13 @@
 package com.test.queue;
 
+import com.test.MyAbstractCollection;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Queue;
 
-public class MyQueue<E> implements Queue<E> {
+public class MyQueue<E> extends MyAbstractCollection<E> implements Queue<E> {
 
     private static class Node<E> {
         Node<E> previous;
@@ -39,39 +41,39 @@ public class MyQueue<E> implements Queue<E> {
     }
 
     @Override
-    public boolean isEmpty() {
-        return size == 0;
-    }
-
-    @Override
     public boolean contains(Object o) {
-        if (o == null) {
-            for (Node<E> node = first; node != null; node = node.next) {
-                if (node.item == null)
-                    return true;
-            }
-        } else {
-            for (Node<E> node = first; node != null; node = node.next) {
-                if (o.equals(node.item))
-                    return true;
-            }
-        }
-        return false;
+        return nodeOf(o) != null;
     }
 
     @Override
     public Iterator<E> iterator() {
-        return null;
+        return new MyQueueIterator<E>();
     }
 
     @Override
     public Object[] toArray() {
-        return new Object[0];
+        final Object[] result = new Object[size];
+        int index = 0;
+        for (Node<E> current = first; current != null; current = current.next) {
+            result[index] = current.item;
+            index++;
+        }
+        return result;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <T> T[] toArray(T[] a) {
-        return null;
+        if (a.length < size) {
+            return (T[]) toArray();
+        }
+
+        int index = 0;
+        for (Node<E> current = first; current != null; current = current.next) {
+            a[index] = (T) current.item;
+            index++;
+        }
+        return a;
     }
 
     @Override
@@ -83,32 +85,89 @@ public class MyQueue<E> implements Queue<E> {
 
     @Override
     public boolean remove(Object o) {
-        return false;
-    }
-
-    @Override
-    public boolean containsAll(Collection<?> c) {
+        if (size == 0)
+            return false;
+        Node<E> node = nodeOf(o);
+        if (node != null) {
+            unlink(node);
+            return true;
+        }
         return false;
     }
 
     @Override
     public boolean addAll(Collection<? extends E> c) {
-        return false;
+        if (c == null || c.isEmpty())
+            return false;
+
+        boolean modified = false;
+        for (E e : c) {
+            modified = offer(e);
+        }
+        return modified;
     }
 
     @Override
     public boolean removeAll(Collection<?> c) {
-        return false;
+        if (c == null || c.isEmpty())
+            return false;
+
+        boolean modified = false;
+        for (Object o : c) {
+            Node<E> node = nodeOf(o);
+            if (node != null) {
+                unlink(node);
+                modified = true;
+            }
+        }
+        return modified;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public boolean retainAll(Collection<?> c) {
-        return false;
+        if (c == null || c.isEmpty())
+            return false;
+
+        Node<E> first = null;
+        Node<E> last = null;
+        int size = 0;
+        boolean modified = false;
+
+        for (Object o : c) {
+            if (contains(o)) {
+                E e = (E) o;
+                Node<E> l = last;
+                Node<E> node = new Node<>(l, e, null);
+                last = node;
+                if (l == null) {
+                    first = node;
+                } else {
+                    l.next = node;
+                }
+                size++;
+                modified = true;
+            }
+        }
+
+        this.first = first;
+        this.last = last;
+        this.size = size;
+        return modified;
     }
 
     @Override
     public void clear() {
-
+        for (Node<E> current = first; current != null; ) {
+            Node<E> next = current.next;
+            current.item = null;
+            current.next = null;
+            current.previous = null;
+            current = next;
+        }
+        first = null;
+        last = null;
+        size = 0;
     }
 
     @Override
@@ -122,27 +181,29 @@ public class MyQueue<E> implements Queue<E> {
 
     @Override
     public E remove() {
-        return null;
+        if (size == 0)
+            throw new NoSuchElementException();
+        return removeFirst();
     }
 
     @Override
     public E poll() {
-        return null;
+        if (size == 0)
+            return null;
+        return removeFirst();
     }
 
     @Override
     public E element() {
-        if (size == 0) {
+        if (size == 0)
             throw new NoSuchElementException();
-        }
         return first.item;
     }
 
     @Override
     public E peek() {
-        if (size == 0) {
+        if (size == 0)
             return null;
-        }
         return first.item;
     }
 
@@ -159,18 +220,6 @@ public class MyQueue<E> implements Queue<E> {
         return true;
     }
 
-    private void linkFirst(E item) {
-        Node<E> f = first;
-        Node<E> node = new Node<>(null, item, f);
-        first = node;
-        if (f == null) {
-            last = node;
-        } else {
-            f.previous = node;
-        }
-        size++;
-    }
-
     private void linkLast(E item) {
         Node<E> l = last;
         Node<E> node = new Node<>(l, item, null);
@@ -181,6 +230,88 @@ public class MyQueue<E> implements Queue<E> {
             l.next = node;
         }
         size++;
+    }
+
+    private E unlink(Node<E> node) {
+        Node<E> previous = node.previous;
+        Node<E> next = node.next;
+        E element = node.item;
+
+        if (next == null) {
+            last = previous;
+        } else {
+            next.previous = previous;
+        }
+
+        if (previous == null) {
+            first = next;
+        } else {
+            previous.next = next;
+        }
+
+        node.item = null;
+        size--;
+        return element;
+    }
+
+    private E removeFirst() {
+        E item = first.item;
+        unlink(first);
+        return item;
+    }
+
+    private Node<E> nodeOf(Object o) {
+        if (o == null) {
+            for (Node<E> node = first; node != null; node = node.next) {
+                if (node.item == null)
+                    return node;
+            }
+        } else {
+            for (Node<E> node = first; node != null; node = node.next) {
+                if (o.equals(node.item))
+                    return node;
+            }
+        }
+        return null;
+    }
+
+    private class MyQueueIterator<E> implements Iterator<E> {
+
+        Node<E> current;
+        Node lastReturned;
+
+        @SuppressWarnings("unchecked")
+        MyQueueIterator() {
+            current = (Node<E>) first;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return current != null;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public E next() {
+            if (current == null) {
+                throw new NoSuchElementException();
+            }
+
+            lastReturned = current;
+            current = current.next;
+            return (E) lastReturned.item;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public void remove() {
+            if (lastReturned == null) {
+                throw new IllegalStateException();
+            }
+
+            MyQueue.this.unlink(lastReturned);
+            lastReturned = null;
+        }
     }
 
 }
