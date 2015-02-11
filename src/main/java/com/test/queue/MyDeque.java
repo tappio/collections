@@ -1,184 +1,414 @@
 package com.test.queue;
 
+import com.test.MyAbstractCollection;
+
 import java.util.Collection;
 import java.util.Deque;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
-public class MyDeque<E> implements Deque<E> {
+public class MyDeque<E> extends MyAbstractCollection<E> implements Deque<E> {
+
+    private static class Node<E> {
+        Node<E> previous;
+        E item;
+        Node<E> next;
+
+        private Node(Node<E> previous, E item, Node<E> next) {
+            this.previous = previous;
+            this.item = item;
+            this.next = next;
+        }
+    }
+
+    private int size;
+    private Node<E> first;
+    private Node<E> last;
 
     @Override
     public void addFirst(E e) {
-
+        linkFirst(e);
     }
 
     @Override
     public void addLast(E e) {
-
+        linkLast(e);
     }
 
     @Override
     public boolean offerFirst(E e) {
-        return false;
+        linkFirst(e);
+        return true;
     }
 
     @Override
     public boolean offerLast(E e) {
-        return false;
+        linkLast(e);
+        return true;
     }
 
     @Override
     public E removeFirst() {
-        return null;
+        if (isEmpty())
+            throw new NoSuchElementException();
+        final E item = first.item;
+        unlink(first);
+        return item;
     }
 
     @Override
     public E removeLast() {
-        return null;
+        if (isEmpty())
+            throw new NoSuchElementException();
+        final E item = last.item;
+        unlink(last);
+        return item;
     }
 
     @Override
     public E pollFirst() {
-        return null;
+        if (isEmpty())
+            return null;
+        final E item = first.item;
+        unlink(first);
+        return item;
     }
 
     @Override
     public E pollLast() {
-        return null;
+        if (isEmpty())
+            return null;
+        final E item = last.item;
+        unlink(last);
+        return item;
     }
 
     @Override
     public E getFirst() {
-        return null;
+        if (isEmpty())
+            throw new NoSuchElementException();
+        return first.item;
     }
 
     @Override
     public E getLast() {
-        return null;
+        if (isEmpty())
+            throw new NoSuchElementException();
+        return last.item;
     }
 
     @Override
     public E peekFirst() {
-        return null;
+        if (isEmpty())
+            return null;
+        return first.item;
     }
 
     @Override
     public E peekLast() {
-        return null;
+        if (isEmpty())
+            return null;
+        return last.item;
     }
 
     @Override
     public boolean removeFirstOccurrence(Object o) {
-        return false;
+        Node<E> node = firstNodeOf(o);
+        if (node == null)
+            return false;
+        unlink(node);
+        return true;
     }
 
     @Override
     public boolean removeLastOccurrence(Object o) {
-        return false;
+        Node<E> node = lastNodeOf(o);
+        if (node == null)
+            return false;
+        unlink(node);
+        return true;
     }
 
     @Override
     public boolean add(E e) {
-        return false;
+        addLast(e);
+        return true;
     }
 
     @Override
     public boolean offer(E e) {
-        return false;
+        return offerLast(e);
     }
 
     @Override
     public E remove() {
-        return null;
+        return removeFirst();
     }
 
     @Override
     public E poll() {
-        return null;
+        return pollFirst();
     }
 
     @Override
     public E element() {
-        return null;
+        return getFirst();
     }
 
     @Override
     public E peek() {
-        return null;
+        return peekFirst();
     }
 
     @Override
     public void push(E e) {
-
+        addFirst(e);
     }
 
     @Override
     public E pop() {
-        return null;
+        return removeFirst();
     }
 
     @Override
     public boolean remove(Object o) {
-        return false;
-    }
-
-    @Override
-    public boolean containsAll(Collection<?> c) {
-        return false;
+        return removeFirstOccurrence(o);
     }
 
     @Override
     public boolean addAll(Collection<? extends E> c) {
-        return false;
+        if (c == null || c.isEmpty())
+            return false;
+
+        boolean modified = false;
+        for (E e : c) {
+            modified = offer(e);
+        }
+        return modified;
     }
 
     @Override
     public boolean removeAll(Collection<?> c) {
-        return false;
+        if (c == null || c.isEmpty())
+            return false;
+
+        boolean modified = false;
+        for (Object o : c) {
+            Node<E> node = firstNodeOf(o);
+            if (node != null) {
+                unlink(node);
+                modified = true;
+            }
+        }
+        return modified;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public boolean retainAll(Collection<?> c) {
-        return false;
+        if (c == null || c.isEmpty())
+            return false;
+
+        Node<E> first = null;
+        Node<E> last = null;
+        int size = 0;
+        boolean modified = false;
+
+        for (Object o : c) {
+            if (contains(o)) {
+                E e = (E) o;
+                Node<E> l = last;
+                Node<E> node = new Node<>(l, e, null);
+                last = node;
+                if (l == null) {
+                    first = node;
+                } else {
+                    l.next = node;
+                }
+                size++;
+                modified = true;
+            }
+        }
+
+        this.first = first;
+        this.last = last;
+        this.size = size;
+        return modified;
     }
 
     @Override
     public void clear() {
-
+        for (Node<E> current = first; current != null; ) {
+            Node<E> next = current.next;
+            current.item = null;
+            current.next = null;
+            current.previous = null;
+            current = next;
+        }
+        first = null;
+        last = null;
+        size = 0;
     }
 
     @Override
     public boolean contains(Object o) {
-        return false;
+        return firstNodeOf(o) != null;
     }
 
     @Override
     public int size() {
-        return 0;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return false;
+        return size;
     }
 
     @Override
     public Iterator<E> iterator() {
-        return null;
+        return new MyDequeIterator<E>();
     }
 
     @Override
     public Object[] toArray() {
-        return new Object[0];
+        final Object[] result = new Object[size];
+        int index = 0;
+        for (Node<E> current = first; current != null; current = current.next) {
+            result[index] = current.item;
+            index++;
+        }
+        return result;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <T> T[] toArray(T[] a) {
-        return null;
+        if (a.length < size) {
+            return (T[]) toArray();
+        }
+
+        int index = 0;
+        for (Node<E> current = first; current != null; current = current.next) {
+            a[index] = (T) current.item;
+            index++;
+        }
+        return a;
     }
 
     @Override
     public Iterator<E> descendingIterator() {
+        throw new UnsupportedOperationException();
+    }
+
+    private void linkFirst(E e) {
+        Node<E> f = first;
+        Node<E> node = new Node<>(null, e, f);
+        first = node;
+        if (f == null) {
+            last = node;
+        } else {
+            f.previous = node;
+        }
+        size++;
+    }
+
+    private void linkLast(E e) {
+        Node<E> l = last;
+        Node<E> node = new Node<>(l, e, null);
+        last = node;
+        if (l == null) {
+            first = node;
+        } else {
+            l.next = node;
+        }
+        size++;
+    }
+
+    private E unlink(Node<E> node) {
+        Node<E> previous = node.previous;
+        Node<E> next = node.next;
+        E element = node.item;
+
+        if (next == null) {
+            last = previous;
+        } else {
+            next.previous = previous;
+        }
+
+        if (previous == null) {
+            first = next;
+        } else {
+            previous.next = next;
+        }
+
+        node.item = null;
+        size--;
+        return element;
+    }
+
+    private Node<E> firstNodeOf(Object o) {
+        if (o == null) {
+            for (Node<E> node = first; node != null; node = node.next) {
+                if (node.item == null)
+                    return node;
+            }
+        } else {
+            for (Node<E> node = first; node != null; node = node.next) {
+                if (o.equals(node.item))
+                    return node;
+            }
+        }
         return null;
+    }
+
+    private Node<E> lastNodeOf(Object o) {
+        if (o == null) {
+            for (Node<E> node = last; node != null; node = node.previous) {
+                if (node.item == null)
+                    return node;
+            }
+        } else {
+            for (Node<E> node = last; node != null; node = node.previous) {
+                if (o.equals(node.item))
+                    return node;
+            }
+        }
+        return null;
+    }
+
+    private class MyDequeIterator<E> implements Iterator<E> {
+
+        Node<E> current;
+        Node lastReturned;
+
+        @SuppressWarnings("unchecked")
+        MyDequeIterator() {
+            current = (Node<E>) first;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return current != null;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public E next() {
+            if (current == null) {
+                throw new NoSuchElementException();
+            }
+
+            lastReturned = current;
+            current = current.next;
+            return (E) lastReturned.item;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public void remove() {
+            if (lastReturned == null) {
+                throw new IllegalStateException();
+            }
+
+            MyDeque.this.unlink(lastReturned);
+            lastReturned = null;
+        }
     }
 
 }

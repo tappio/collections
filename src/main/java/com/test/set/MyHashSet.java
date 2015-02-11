@@ -97,8 +97,9 @@ public class MyHashSet<E> extends MyAbstractCollection<E> implements Set<E> {
         if (table[index] == null) {
             table[index] = new Node<E>(e, null);
         } else {
-            Node head = table[index];
-            Node<E> newNode = new Node<E>(e, head);
+            @SuppressWarnings("unchecked")
+            Node<E> head = table[index];
+            Node<E> newNode = new Node<>(e, head);
             table[index] = newNode;
         }
         size++;
