@@ -16,8 +16,7 @@ public class MyHashMap<K,V> implements Map<K,V> {
             this.key = key;
             this.value = value;
             this.next = next;
-            if (key != null)
-                hashCode = key.hashCode();
+            hashCode = (key == null) ? 0 : key.hashCode();
         }
 
         @Override
@@ -33,6 +32,11 @@ public class MyHashMap<K,V> implements Map<K,V> {
         @Override
         public V setValue(V value) {
             return this.value = value;
+        }
+
+        @Override
+        public String toString() {
+            return key + "=" + value;
         }
     }
 
@@ -50,7 +54,7 @@ public class MyHashMap<K,V> implements Map<K,V> {
         }
         this.capacity = capacity;
         table = new Entry[capacity];
-        this.threshold = (int) (capacity * DEFAULT_LOAD_FACTOR);
+        threshold = (int) (capacity * DEFAULT_LOAD_FACTOR);
     }
 
     public MyHashMap() {
@@ -154,7 +158,7 @@ public class MyHashMap<K,V> implements Map<K,V> {
     @SuppressWarnings("unchecked")
     @Override
     public Set<K> keySet() {
-        final MyHashSet<K> keySet = new MyHashSet<>();
+        final Set<K> keySet = new MyHashSet<>();
         for (Entry<K,V> entry : table) {
             for (Entry<K,V> current = entry; current != null; current = current.next) {
                 keySet.add(current.getKey());
@@ -166,7 +170,7 @@ public class MyHashMap<K,V> implements Map<K,V> {
     @SuppressWarnings("unchecked")
     @Override
     public Collection<V> values() {
-        final MyHashSet<V> values = new MyHashSet<>();
+        final Set<V> values = new MyHashSet<>();
         for (Entry<K,V> entry : table) {
             for (Entry<K,V> current = entry; current != null; current = current.next) {
                 values.add(current.getValue());
@@ -178,8 +182,12 @@ public class MyHashMap<K,V> implements Map<K,V> {
     @SuppressWarnings("unchecked")
     @Override
     public Set<Map.Entry<K, V>> entrySet() {
-        final MyHashSet<Map.Entry<K, V>> entrySet = new MyHashSet<>();
-        Collections.addAll(entrySet, table);
+        final Set<Map.Entry<K, V>> entrySet = new MyHashSet<>();
+        for (Entry<K,V> entry : table) {
+            for (Entry<K,V> current = entry; current != null; current = current.next) {
+                entrySet.add(current);
+            }
+        }
         return entrySet;
     }
 
@@ -291,6 +299,28 @@ public class MyHashMap<K,V> implements Map<K,V> {
             }
         }
         table = newTable;
+    }
+
+    @Override
+    public String toString() {
+        if (isEmpty()) {
+            return "{}";
+        }
+
+        Iterator<Map.Entry<K,V>> iterator = entrySet().iterator();
+        final StringBuilder builder = new StringBuilder();
+        builder.append("{");
+        while (iterator.hasNext()) {
+            Map.Entry<K, V> entry = iterator.next();
+            K key = entry.getKey();
+            V value = entry.getValue();
+            builder.append(key).append("=").append(value);
+            if (iterator.hasNext()) {
+                builder.append(", ");
+            }
+        }
+        builder.append("}");
+        return builder.toString();
     }
 
 }
