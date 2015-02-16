@@ -35,25 +35,32 @@ public class MyTreeSet<E> extends MyAbstractCollection<E> implements Set<E> {
 
     @Override
     public Iterator<E> iterator() {
-        return null;
+        return new MyTreeSetIterator<E>();
     }
 
     @Override
     public Object[] toArray() {
         final Object[] result = new Object[size];
         int i = 0;
-        Iterator iterator = iterator();
-        while (iterator.hasNext()) {
-            Object next = iterator.next();
-            result[i] = next;
+        for (Object o : this) {
+            result[i] = o;
             i++;
         }
         return result;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <T> T[] toArray(T[] a) {
-        return null;
+        if (a.length < size) {
+            return (T[]) toArray();
+        }
+        int i = 0;
+        for (Object o : this) {
+            a[i] = (T) o;
+            i++;
+        }
+        return a;
     }
 
     @Override
@@ -98,11 +105,68 @@ public class MyTreeSet<E> extends MyAbstractCollection<E> implements Set<E> {
 
     @Override
     public boolean remove(Object o) {
+        if (o == null)
+            throw new NullPointerException();
+        if (size == 0)
+            return false;
+
+        int comparisonResult;
+        Entry<E> current = root;
+        @SuppressWarnings("unchecked")
+        Comparable<? super E> k = (Comparable<? super E>) o;
+        do {
+            comparisonResult = k.compareTo(current.value);
+            if (comparisonResult < 0)
+                current = current.left;
+            else if (comparisonResult > 0)
+                current = current.right;
+            else {
+                delete(current);
+                size--;
+                return true;
+            }
+        } while (current != null);
+
         return false;
     }
 
-    @Override
-    public boolean containsAll(Collection<?> c) {
+    private boolean delete(Entry entry) {
+        if (size == 1) {
+            root.value = null;
+            root = null;
+            return true;
+        }
+
+        Entry parent = entry.parent;
+        Entry left = entry.left;
+        Entry right = entry.right;
+        entry.value = null;
+
+        // no children case
+        if (left == null && right == null) {
+            if (parent.left == entry)
+                parent.left = null;
+            else
+                parent.right = null;
+            return true;
+        }
+
+        // one child case
+        if (left == null) {
+            if (parent.left == entry)
+                parent.left = right;
+            else
+                parent.right = right;
+            return true;
+        } else if (right == null) {
+            if (parent.left == entry)
+                parent.left = left;
+            else
+                parent.right = left;
+            return true;
+        }
+
+        // 2 children case here
         return false;
     }
 
@@ -124,6 +188,24 @@ public class MyTreeSet<E> extends MyAbstractCollection<E> implements Set<E> {
     @Override
     public void clear() {
 
+    }
+
+    private static class MyTreeSetIterator<E> implements Iterator<E> {
+
+        @Override
+        public boolean hasNext() {
+            return false;
+        }
+
+        @Override
+        public E next() {
+            return null;
+        }
+
+        @Override
+        public void remove() {
+
+        }
     }
 
 }
