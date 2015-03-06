@@ -1,17 +1,18 @@
-package com.test.queue;
+package com.test.stack;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
 
-public class MyStackTest {
+public abstract class MyAbstractStackTest {
 
-    private MyStack<String> stack;
+    private SimpleStack<String> stack;
     private String[] startArr = {"a", "b", "a", "d", "a", null, "k", "", "s", "z"};
     private static final int MAX_SIZE = 12;
 
@@ -20,13 +21,15 @@ public class MyStackTest {
         stack = getDefaultStack();
     }
 
-    private MyStack<String> getDefaultStack() {
-        MyStack<String> result = new MyStack<>(MAX_SIZE);
+    private SimpleStack<String> getDefaultStack() {
+        SimpleStack<String> result = initStack(MAX_SIZE);
         fillWithDefaultData(result);
         return result;
     }
 
-    private void fillWithDefaultData(MyStack<String> stack) {
+    protected abstract SimpleStack<String> initStack(int maxSize);
+
+    private void fillWithDefaultData(SimpleStack<String> stack) {
         stack.add("z");
         stack.add("s");
         stack.add("");
@@ -110,7 +113,7 @@ public class MyStackTest {
 
     @Test
     public void testAddAll() throws Exception {
-        MyStack<String> copy = getDefaultStack();
+        SimpleStack<String> copy = getDefaultStack();
         copy.add("a");
         copy.add("b");
         stack.addAll(Arrays.asList("a", "b"));

@@ -1,4 +1,4 @@
-package com.test.queue;
+package com.test.stack;
 
 import com.test.MyAbstractCollection;
 
@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class MyStack<E> extends MyAbstractCollection<E> {
+public class MyStack<E> extends MyAbstractCollection<E> implements SimpleStack<E> {
 
     private static class Node<E> {
         E item;
@@ -119,17 +119,20 @@ public class MyStack<E> extends MyAbstractCollection<E> {
         size = 0;
     }
 
+    @Override
     public void push(E e) {
         checkSize();
         linkFirst(e);
     }
 
+    @Override
     public E pop() {
         if (isEmpty())
             throw new NoSuchElementException();
         return unlinkFirst();
     }
 
+    @Override
     public boolean offer(E e) {
         if (isSpaceAvailable()) {
             linkFirst(e);
@@ -138,6 +141,7 @@ public class MyStack<E> extends MyAbstractCollection<E> {
         return false;
     }
 
+    @Override
     public boolean poll() {
         if (isEmpty())
             return false;
@@ -145,6 +149,7 @@ public class MyStack<E> extends MyAbstractCollection<E> {
         return true;
     }
 
+    @Override
     public E element() {
         if (isEmpty())
             throw new NoSuchElementException();
@@ -153,6 +158,7 @@ public class MyStack<E> extends MyAbstractCollection<E> {
         return item;
     }
 
+    @Override
     public E peek() {
         if (isEmpty())
             return null;
