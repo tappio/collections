@@ -64,6 +64,7 @@ public class MyTreeSet<E> extends MyAbstractCollection<E> implements Set<E> {
     }
 
     @Override
+    // TODO: Improve. Adding time is very poor.
     public boolean add(E e) {
         if (e == null) {
             throw new NullPointerException();
@@ -112,12 +113,7 @@ public class MyTreeSet<E> extends MyAbstractCollection<E> implements Set<E> {
 
         Entry<E> entry = searchForEntry(o);
         if (entry != null) {
-            if (size == 1)
-                clear();
-            else
-                deleteEntry(entry);
-
-            size--;
+            deleteEntry(entry);
             return true;
         }
 
@@ -139,7 +135,19 @@ public class MyTreeSet<E> extends MyAbstractCollection<E> implements Set<E> {
 
     @Override
     public boolean retainAll(Collection<?> c) {
-        return false;
+        if (c == null || c.isEmpty())
+            return false;
+
+        boolean modified = false;
+        Iterator<E> iterator = iterator();
+        while (iterator.hasNext()) {
+            E e = iterator.next();
+            if (!c.contains(e)) {
+                iterator.remove();
+                modified = true;
+            }
+        }
+        return modified;
     }
 
     @Override
@@ -187,7 +195,8 @@ public class MyTreeSet<E> extends MyAbstractCollection<E> implements Set<E> {
 
         // root case
         if (parent == null) {
-            return false;
+            clear();
+            return true;
         }
 
         // no children case
@@ -196,6 +205,7 @@ public class MyTreeSet<E> extends MyAbstractCollection<E> implements Set<E> {
                 parent.left = null;
             else
                 parent.right = null;
+            size--;
             return true;
         }
 
@@ -205,17 +215,38 @@ public class MyTreeSet<E> extends MyAbstractCollection<E> implements Set<E> {
                 parent.left = right;
             else
                 parent.right = right;
+            size--;
             return true;
         } else if (right == null) {
             if (parent.left == entry)
                 parent.left = left;
             else
                 parent.right = left;
+            size--;
             return true;
         }
 
-        // 2 children case here
-        return false;
+        // 2 children case
+        Entry minEntry = findMinEntry(right);
+        Object minValue = minEntry.value;
+        deleteEntry(minEntry);
+        entry.value = minValue;
+        return true;
+    }
+
+    private Entry findMinEntry(Entry root) {
+        Entry current = root;
+        while (current != null) {
+            if (current.left == null) {
+                return current;
+            }
+            current = current.left;
+        }
+        return null;
+    }
+
+    private Entry findMinEntry() {
+        return findMinEntry(root);
     }
 
     private static class MyTreeSetIterator<E> implements Iterator<E> {

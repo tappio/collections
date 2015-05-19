@@ -179,7 +179,7 @@ public class MyHashMap<K,V> implements Map<K,V> {
         return values;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "NullableProblems"})
     @Override
     public Set<Map.Entry<K, V>> entrySet() {
         final Set<Map.Entry<K, V>> entrySet = new MyHashSet<>();
