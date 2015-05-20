@@ -2,9 +2,7 @@ package com.test.tree;
 
 import com.test.MyAbstractCollection;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 public class MyTreeSet<E> extends MyAbstractCollection<E> implements Set<E> {
 
@@ -34,8 +32,10 @@ public class MyTreeSet<E> extends MyAbstractCollection<E> implements Set<E> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Iterator<E> iterator() {
-        return new MyTreeSetIterator<E>();
+        Entry minEntry = findMinEntry();
+        return new MyTreeSetIterator(minEntry);
     }
 
     @Override
@@ -112,12 +112,7 @@ public class MyTreeSet<E> extends MyAbstractCollection<E> implements Set<E> {
             return false;
 
         Entry<E> entry = searchForEntry(o);
-        if (entry != null) {
-            deleteEntry(entry);
-            return true;
-        }
-
-        return false;
+        return deleteEntry(entry);
     }
 
     @Override
@@ -189,24 +184,38 @@ public class MyTreeSet<E> extends MyAbstractCollection<E> implements Set<E> {
     }
 
     private boolean deleteEntry(Entry entry) {
+        if (entry == null)
+            return false;
+
         Entry parent = entry.parent;
         Entry left = entry.left;
         Entry right = entry.right;
 
-        // root case
-        if (parent == null) {
-            clear();
-            return true;
-        }
-
         // no children case
         if (left == null && right == null) {
+            // only root has left
+            if (parent == null) {
+                clear();
+                return true;
+            }
             if (parent.left == entry)
                 parent.left = null;
             else
                 parent.right = null;
+            entry.parent = null;
             size--;
             return true;
+        }
+
+        // remove root with one child
+        if (parent == null && (left == null || right == null)) {
+            if (left == null) {
+                replaceRight(entry);
+                return true;
+            } else {
+                replaceLeft(entry);
+                return true;
+            }
         }
 
         // one child case
@@ -215,6 +224,9 @@ public class MyTreeSet<E> extends MyAbstractCollection<E> implements Set<E> {
                 parent.left = right;
             else
                 parent.right = right;
+            entry.parent = null;
+            entry.right = null;
+            right.parent = parent;
             size--;
             return true;
         } else if (right == null) {
@@ -222,48 +234,112 @@ public class MyTreeSet<E> extends MyAbstractCollection<E> implements Set<E> {
                 parent.left = left;
             else
                 parent.right = left;
+            entry.parent = null;
+            entry.left = null;
+            left.parent = parent;
             size--;
             return true;
         }
 
         // 2 children case
-        Entry minEntry = findMinEntry(right);
-        Object minValue = minEntry.value;
-        deleteEntry(minEntry);
-        entry.value = minValue;
+        replaceRight(entry);
         return true;
     }
 
-    private Entry findMinEntry(Entry root) {
-        Entry current = root;
-        while (current != null) {
-            if (current.left == null) {
-                return current;
+    private void replaceRight(Entry entry) {
+        Entry minEntry = findMinEntry(entry.right);
+        Object minValue = minEntry.value;
+        deleteEntry(minEntry);
+        entry.value = minValue;
+    }
+
+    private void replaceLeft(Entry entry) {
+        Entry maxEntry = findMaxEntry(entry.left);
+        Object maxValue = maxEntry.value;
+        deleteEntry(maxEntry);
+        entry.value = maxValue;
+    }
+
+    private static Entry findMinEntry(Entry root) {
+        Entry entry = root;
+        if (entry != null) {
+            while (entry.left != null) {
+                entry = entry.left;
             }
-            current = current.left;
         }
-        return null;
+        return entry;
+    }
+
+    private Entry findMaxEntry(Entry root) {
+        Entry entry = root;
+        if (entry != null) {
+            while (entry.right != null) {
+                entry = entry.right;
+            }
+        }
+        return entry;
     }
 
     private Entry findMinEntry() {
         return findMinEntry(root);
     }
 
-    private static class MyTreeSetIterator<E> implements Iterator<E> {
+    private Entry findMaxEntry() {
+        return findMaxEntry(root);
+    }
+
+    private static <E> Entry<E> successor(Entry<E> entry) {
+        if (entry == null)
+            return null;
+        else if (entry.right != null) {
+            Entry<E> current = entry.right;
+            while (current.left != null)
+                current = current.left;
+            return current;
+        } else {
+            Entry<E> parent = entry.parent;
+            Entry<E> current = entry;
+            while (parent != null && current == parent.right) {
+                current = parent;
+                parent = parent.parent;
+            }
+            return parent;
+        }
+    }
+
+    private class MyTreeSetIterator implements Iterator<E> {
+
+        Entry<E> next;
+        Entry<E> lastReturned;
+
+        MyTreeSetIterator(Entry<E> first) {
+            next = first;
+            lastReturned = null;
+        }
 
         @Override
         public boolean hasNext() {
-            return false;
+            return next != null;
         }
 
         @Override
         public E next() {
-            return null;
+            Entry<E> entry = next;
+            if (entry == null)
+                throw new NoSuchElementException();
+            next = successor(entry);
+            lastReturned = entry;
+            return entry.value;
         }
 
         @Override
         public void remove() {
-
+            if (lastReturned == null)
+                throw new IllegalStateException();
+            if (lastReturned.left != null && lastReturned.right != null)
+                next = lastReturned;
+            deleteEntry(lastReturned);
+            lastReturned = null;
         }
     }
 
