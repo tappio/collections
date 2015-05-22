@@ -21,6 +21,78 @@ public class MyTreeSet<E> extends MyAbstractCollection<E> implements Set<E> {
     private int size;
     private Entry<E> root;
 
+    public List<E> levelOrderTraversal() {
+        List<E> result = new ArrayList<>();
+        if (root == null)
+            return result;
+
+        Queue<Entry<E>> entryQueue = new LinkedList<>();
+        entryQueue.offer(root);
+        while (!entryQueue.isEmpty()) {
+            Entry<E> first = entryQueue.poll();
+            result.add(first.value);
+            if (first.left != null)
+                entryQueue.offer(first.left);
+            if (first.right != null)
+                entryQueue.offer(first.right);
+        }
+        return result;
+    }
+
+    // Root (data) -> Left -> Right (DLR)
+    public List<E> preOrderTraversal() {
+        List<E> result = new ArrayList<>();
+        if (root == null)
+            return result;
+        preOrder(root, result);
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void preOrder(Entry entry, List result) {
+        if (entry == null)
+            return;
+        result.add(entry.value);
+        preOrder(entry.left, result);
+        preOrder(entry.right, result);
+    }
+
+    // Left -> Root (data) -> Right (LDR)
+    public List<E> inOrderTraversal() {
+        List<E> result = new ArrayList<>();
+        if (root == null)
+            return result;
+        inOrder(root, result);
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void inOrder(Entry entry, List result) {
+        if (entry == null)
+            return;
+        inOrder(entry.left, result);
+        result.add(entry.value);
+        inOrder(entry.right, result);
+    }
+
+    // Left -> Right -> Root (data) (LRD)
+    public List<E> postOrderTraversal() {
+        List<E> result = new ArrayList<>();
+        if (root == null)
+            return result;
+        postOrder(root, result);
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void postOrder(Entry entry, List result) {
+        if (entry == null)
+            return;
+        postOrder(entry.left, result);
+        postOrder(entry.right, result);
+        result.add(entry.value);
+    }
+
     @Override
     public int size() {
         return size;

@@ -3,14 +3,13 @@ package com.test.tree;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
 public class MyTreeSetTest {
+
+    private static final List<String> TRAVERSAL_LIST = Arrays.asList("F", "D", "J", "B", "E", "G", "K", "A", "C", "I", "H");
 
     private Set<String> set;
 
@@ -23,6 +22,12 @@ public class MyTreeSetTest {
         Set<String> set = new MyTreeSet<>();
         fillWithDefaultData(set);
         return set;
+    }
+
+    private MyTreeSet<String> getTraversalSet() {
+        MyTreeSet<String> stringSet = new MyTreeSet<>();
+        stringSet.addAll(TRAVERSAL_LIST);
+        return stringSet;
     }
 
     private void fillWithDefaultData(Set<String> set) {
@@ -42,8 +47,40 @@ public class MyTreeSetTest {
 
     private void removeElements(Set<String> set, int num) {
         for (int i = 0; i < num; i++) {
-            set.remove(String.valueOf((char)i));
+            set.remove(String.valueOf((char) i));
         }
+    }
+
+    @Test
+    public void testLevelOrderTraversal() throws Exception {
+        System.out.println("LevelOrderTraversal");
+        MyTreeSet<String> stringSet = getTraversalSet();
+        List<String> strings = stringSet.levelOrderTraversal();
+        System.out.println(strings);
+    }
+
+    @Test
+    public void testPreOrderTraversal() throws Exception {
+        System.out.println("PreOrderTraversal");
+        MyTreeSet<String> stringSet = getTraversalSet();
+        List<String> strings = stringSet.preOrderTraversal();
+        System.out.println(strings);
+    }
+
+    @Test
+    public void testInOrderTraversal() throws Exception {
+        System.out.println("InOrderTraversal");
+        MyTreeSet<String> stringSet = getTraversalSet();
+        List<String> strings = stringSet.inOrderTraversal();
+        System.out.println(strings);
+    }
+
+    @Test
+    public void postInOrderTraversal() throws Exception {
+        System.out.println("PostOrderTraversal");
+        MyTreeSet<String> stringSet = getTraversalSet();
+        List<String> strings = stringSet.postOrderTraversal();
+        System.out.println(strings);
     }
 
     @Test
