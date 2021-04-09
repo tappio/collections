@@ -1,8 +1,11 @@
 package com.test.map;
 
-import com.test.set.MyHashSet;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
-import java.util.*;
+import com.test.set.MyHashSet;
 
 public class MyHashMap<K,V> implements Map<K,V> {
 
@@ -149,7 +152,6 @@ public class MyHashMap<K,V> implements Map<K,V> {
                 current.next = null;
                 current = next;
             }
-            entry = null;
         }
         table = new Entry[capacity];
         size = 0;
@@ -179,7 +181,7 @@ public class MyHashMap<K,V> implements Map<K,V> {
         return values;
     }
 
-    @SuppressWarnings({"unchecked", "NullableProblems"})
+    @SuppressWarnings({"unchecked"})
     @Override
     public Set<Map.Entry<K, V>> entrySet() {
         final Set<Map.Entry<K, V>> entrySet = new MyHashSet<>();

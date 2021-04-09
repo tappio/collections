@@ -1,21 +1,24 @@
 package com.test.set;
 
-import org.junit.Before;
-import org.junit.Test;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public abstract class MyAbstractSetTest {
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+abstract class MyAbstractSetTest {
 
     private Set<String> set;
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    void setUp() {
         set = getDefaultSet();
     }
 
@@ -53,7 +56,7 @@ public abstract class MyAbstractSetTest {
     }
 
     @Test
-    public void testSize() throws Exception {
+    void testSize() {
         assertEquals(8, set.size());
         set.add("AAA");
         set.add("BBB");
@@ -69,24 +72,24 @@ public abstract class MyAbstractSetTest {
     }
 
     @Test
-    public void testIsEmpty() throws Exception {
-        assertEquals(false, set.isEmpty());
+    void testIsEmpty() {
+        assertFalse(set.isEmpty());
         set.clear();
-        assertEquals(true, set.isEmpty());
+        assertTrue(set.isEmpty());
         set.add("a");
-        assertEquals(false, set.isEmpty());
+        assertFalse(set.isEmpty());
     }
 
     @Test
-    public void testContains() throws Exception {
-        assertEquals(false, set.contains("notThere"));
-        assertEquals(true, set.contains(""));
-        assertEquals(true, set.contains(null));
-        assertEquals(true, set.contains("a"));
+    void testContains() {
+        assertFalse(set.contains("notThere"));
+        assertTrue(set.contains(""));
+        assertTrue(set.contains(null));
+        assertTrue(set.contains("a"));
     }
 
     @Test
-    public void testIterator() throws Exception {
+    void testIterator() {
         Object[] objects = set.toArray();
         Iterator<String> iterator = set.iterator();
         for (Object object : objects) {
@@ -99,7 +102,7 @@ public abstract class MyAbstractSetTest {
     }
 
     @Test
-    public void testToArray() throws Exception {
+    void testToArray() {
         final Object[] result = new Object[set.size()];
         int i = 0;
         for (String s : set) {
@@ -110,7 +113,7 @@ public abstract class MyAbstractSetTest {
     }
 
     @Test
-    public void testToArrayWithParam() throws Exception {
+    void testToArrayWithParam() {
         String[] result = new String[set.size()];
         set.toArray(result);
 
@@ -124,15 +127,15 @@ public abstract class MyAbstractSetTest {
     }
 
     @Test
-    public void testAdd() throws Exception {
+    void testAdd() {
         int startSize = set.size();
         set.add("newValue");
-        assertEquals(true, set.contains("newValue"));
-        assertEquals(true, set.size() == startSize + 1);
+        assertTrue(set.contains("newValue"));
+        assertEquals(set.size(), startSize + 1);
 
         set.add(null);
-        assertEquals(true, set.contains(null));
-        assertEquals(true, set.size() == startSize + 1);
+        assertTrue(set.contains(null));
+        assertEquals(set.size(), startSize + 1);
 
         long startTime = System.currentTimeMillis();
         addElements(set, 1_000_000);
@@ -141,19 +144,19 @@ public abstract class MyAbstractSetTest {
     }
 
     @Test
-    public void testRemove() throws Exception {
+    void testRemove() {
         int startSize = set.size();
         set.remove("a");
-        assertEquals(true, set.size() == startSize - 1);
+        assertEquals(set.size(), startSize - 1);
 
         set.remove("b");
-        assertEquals(true, set.size() == startSize - 2);
+        assertEquals(set.size(), startSize - 2);
 
         set.remove("notThere");
-        assertEquals(true, set.size() == startSize - 2);
+        assertEquals(set.size(), startSize - 2);
 
         set.remove(null);
-        assertEquals(true, set.size() == startSize - 3);
+        assertEquals(set.size(), startSize - 3);
 
         int elNum = 1_000_000;
         addElements(set, elNum);
@@ -164,13 +167,13 @@ public abstract class MyAbstractSetTest {
     }
 
     @Test
-    public void testContainsAll() throws Exception {
-        assertEquals(true, set.containsAll(Arrays.asList("a", "b", "k", "s")));
-        assertEquals(false, set.containsAll(Arrays.asList("a", "b", "k", "s", "notThere")));
+    void testContainsAll() {
+        assertTrue(set.containsAll(Arrays.asList("a", "b", "k", "s")));
+        assertFalse(set.containsAll(Arrays.asList("a", "b", "k", "s", "notThere")));
     }
 
     @Test
-    public void testAddAll() throws Exception {
+    void testAddAll() {
         Set<String> copy = getDefaultSet();
         copy.add("a");
         copy.add("b");
@@ -180,7 +183,7 @@ public abstract class MyAbstractSetTest {
     }
 
     @Test
-    public void testRetainAll() throws Exception {
+    void testRetainAll() {
         Set<String> newSet = new HashSet<>();
         newSet.add("k");
         newSet.add("s");
@@ -190,7 +193,7 @@ public abstract class MyAbstractSetTest {
     }
 
     @Test
-    public void testRemoveAll() throws Exception {
+    void testRemoveAll() {
         Set<String> copy = getDefaultSet();
         copy.remove("a");
         copy.remove("b");
@@ -200,7 +203,7 @@ public abstract class MyAbstractSetTest {
     }
 
     @Test
-    public void testClear() throws Exception {
+    void testClear() {
         set.clear();
         assertEquals(0, set.size());
         set.add("a");

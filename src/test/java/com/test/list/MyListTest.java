@@ -1,21 +1,27 @@
 package com.test.list;
 
-import org.junit.Before;
-import org.junit.Test;
-
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public abstract class MyListTest {
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+abstract class MyListTest {
+
+    private final String[] startArr = {"a", "b", "a", "d", "a", null, "k", "", "s", "z"};
     private List<String> list;
-    private String[] startArr = {"a", "b", "a", "d", "a", null, "k", "", "s", "z"};
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    void setUp() {
         list = getDefaultList();
     }
 
@@ -53,7 +59,7 @@ public abstract class MyListTest {
     }
 
     @Test
-    public void testSize() throws Exception {
+    void testSize() {
         assertEquals(10, list.size());
         list.add("AAA");
         list.add("BBB");
@@ -68,61 +74,61 @@ public abstract class MyListTest {
     }
 
     @Test
-    public void testIsEmpty() throws Exception {
-        assertEquals(false, list.isEmpty());
+    void testIsEmpty() {
+        assertFalse(list.isEmpty());
         list.clear();
-        assertEquals(true, list.isEmpty());
+        assertTrue(list.isEmpty());
         list.add("a");
-        assertEquals(false, list.isEmpty());
+        assertFalse(list.isEmpty());
     }
 
     @Test
-    public void testContains() throws Exception {
-        assertEquals(false, list.contains("notThere"));
-        assertEquals(true, list.contains(""));
-        assertEquals(true, list.contains(null));
-        assertEquals(true, list.contains("a"));
+    void testContains() {
+        assertFalse(list.contains("notThere"));
+        assertTrue(list.contains(""));
+        assertTrue(list.contains(null));
+        assertTrue(list.contains("a"));
     }
 
     @Test
-    public void testIterator() throws Exception {
+    void testIterator() {
         Object[] objects = list.toArray();
         Iterator<String> iterator = list.iterator();
         for (Object object : objects) {
-            assertEquals(true, iterator.hasNext());
+            assertTrue(iterator.hasNext());
             assertEquals(object, iterator.next());
             iterator.remove();
         }
-        assertEquals(false, iterator.hasNext());
+        assertFalse(iterator.hasNext());
         assertEquals(0, list.size());
     }
 
     @Test
-    public void testToArray() throws Exception {
+    void testToArray() {
         Object[] objects = list.toArray();
-        assertEquals(true, Arrays.equals(objects, startArr));
+        assertArrayEquals(objects, startArr);
     }
 
     @Test
-    public void testToArrayWithParam() throws Exception {
+    void testToArrayWithParam() {
         String[] result = new String[startArr.length];
         String[] objects = list.toArray(result);
-        assertEquals(true, Arrays.equals(objects, startArr));
-        assertEquals(true, result == objects);
+        assertArrayEquals(objects, startArr);
+        assertSame(result, objects);
     }
 
     @Test
-    public void testAdd() throws Exception {
+    void testAdd() {
         int startSize = list.size();
         list.add("newValue");
-        assertEquals(true, list.contains("newValue"));
-        assertEquals(true, list.size() == startSize + 1);
+        assertTrue(list.contains("newValue"));
+        assertEquals(list.size(), startSize + 1);
         assertEquals("newValue", list.get(list.size() - 1));
 
         list.add(null);
-        assertEquals(true, list.contains(null));
-        assertEquals(true, list.size() == startSize + 2);
-        assertEquals(null, list.get(list.size() - 1));
+        assertTrue(list.contains(null));
+        assertEquals(list.size(), startSize + 2);
+        assertNull(list.get(list.size() - 1));
 
         long startTime = System.currentTimeMillis();
         addElements(list, 1_000_000);
@@ -131,19 +137,19 @@ public abstract class MyListTest {
     }
 
     @Test
-    public void testRemove() throws Exception {
+    void testRemove() {
         int startSize = list.size();
         list.remove("a");
-        assertEquals(true, list.size() == startSize - 1);
+        assertEquals(list.size(), startSize - 1);
 
         list.remove("b");
-        assertEquals(true, list.size() == startSize - 2);
+        assertEquals(list.size(), startSize - 2);
 
         list.remove("notThere");
-        assertEquals(true, list.size() == startSize - 2);
+        assertEquals(list.size(), startSize - 2);
 
         list.remove(null);
-        assertEquals(true, list.size() == startSize - 3);
+        assertEquals(list.size(), startSize - 3);
 
         int elNum = 10000;
         addElements(list, elNum);
@@ -154,13 +160,13 @@ public abstract class MyListTest {
     }
 
     @Test
-    public void testContainsAll() throws Exception {
-        assertEquals(true, list.containsAll(Arrays.asList("a", "b", "k", "s")));
-        assertEquals(false, list.containsAll(Arrays.asList("a", "b", "k", "s", "notThere")));
+    void testContainsAll() {
+        assertTrue(list.containsAll(Arrays.asList("a", "b", "k", "s")));
+        assertFalse(list.containsAll(Arrays.asList("a", "b", "k", "s", "notThere")));
     }
 
     @Test
-    public void testAddAll() throws Exception {
+    void testAddAll() {
         List<String> copy = getDefaultList();
         copy.add("a");
         copy.add("b");
@@ -170,7 +176,7 @@ public abstract class MyListTest {
     }
 
     @Test
-    public void testAddAllWithParam() throws Exception {
+    void testAddAllWithParam() {
         List<String> copy = getDefaultList();
         copy.add(5, "c");
         copy.add(5, "b");
@@ -180,7 +186,7 @@ public abstract class MyListTest {
     }
 
     @Test
-    public void testRemoveAll() throws Exception {
+    void testRemoveAll() {
         List<String> copy = getDefaultList();
         copy.remove("a");
         copy.remove("b");
@@ -190,7 +196,7 @@ public abstract class MyListTest {
     }
 
     @Test
-    public void testRetainAll() throws Exception {
+    void testRetainAll() {
         List<String> newList = new MyArrayList<>();
         newList.add("k");
         newList.add("s");
@@ -200,7 +206,7 @@ public abstract class MyListTest {
     }
 
     @Test
-    public void testClear() throws Exception {
+    void testClear() {
         list.clear();
         assertEquals(0, list.size());
         list.add("a");
@@ -208,13 +214,13 @@ public abstract class MyListTest {
     }
 
     @Test
-    public void testGet() throws Exception {
+    void testGet() {
        assertEquals("a", list.get(0));
        assertEquals("z", list.get(9));
     }
 
     @Test
-    public void testSet() throws Exception {
+    void testSet() {
         int listSize = list.size();
         assertEquals("a", list.get(0));
         assertEquals(listSize, list.size());
@@ -224,7 +230,7 @@ public abstract class MyListTest {
     }
 
     @Test
-    public void testAddByIndex() throws Exception {
+    void testAddByIndex() {
         int listSize = list.size();
         assertEquals("a", list.get(0));
         assertEquals(listSize, list.size());
@@ -234,7 +240,7 @@ public abstract class MyListTest {
     }
 
     @Test
-    public void testRemoveByIndex() throws Exception {
+    void testRemoveByIndex() {
         int listSize = list.size();
         assertEquals("a", list.get(0));
         assertEquals(listSize, list.size());
@@ -244,30 +250,30 @@ public abstract class MyListTest {
     }
 
     @Test
-    public void testIndexOf() throws Exception {
+    void testIndexOf() {
         assertEquals(0, list.indexOf("a"));
         assertEquals(9, list.indexOf("z"));
     }
 
     @Test
-    public void testLastIndexOf() throws Exception {
+    void testLastIndexOf() {
         assertEquals(4, list.lastIndexOf("a"));
         assertEquals(9, list.lastIndexOf("z"));
         assertEquals(5, list.lastIndexOf(null));
     }
 
-    @Test(expected = UnsupportedOperationException.class)
-    public void testListIterator() throws Exception {
-        list.listIterator();
-    }
-
-    @Test(expected = UnsupportedOperationException.class)
-    public void testListIteratorByIndex() throws Exception {
-        list.listIterator(0);
+    @Test
+    void testListIterator() {
+        assertThrows(UnsupportedOperationException.class, () -> list.listIterator());
     }
 
     @Test
-    public void testSubList() throws Exception {
+    void testListIteratorByIndex() {
+        assertThrows(UnsupportedOperationException.class, () -> list.listIterator(0));
+    }
+
+    @Test
+    void testSubList() {
         List<String> strings = list.subList(0, 3);
         assertEquals(strings, Arrays.asList("a", "b", "a"));
     }

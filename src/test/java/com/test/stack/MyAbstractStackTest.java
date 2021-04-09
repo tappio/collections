@@ -1,23 +1,29 @@
 package com.test.stack;
 
-import org.junit.Before;
-import org.junit.Test;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public abstract class MyAbstractStackTest {
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+abstract class MyAbstractStackTest {
+
+    private final String[] startArr = {"a", "b", "a", "d", "a", null, "k", "", "s", "z"};
     private SimpleStack<String> stack;
-    private String[] startArr = {"a", "b", "a", "d", "a", null, "k", "", "s", "z"};
     private static final int MAX_SIZE = 12;
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    void setUp() {
         stack = getDefaultStack();
     }
 
@@ -43,7 +49,7 @@ public abstract class MyAbstractStackTest {
     }
 
     @Test
-    public void testSize() throws Exception {
+    void testSize() {
         int size = stack.size();
         assertEquals("a", stack.peek());
         size--;
@@ -57,7 +63,7 @@ public abstract class MyAbstractStackTest {
     }
 
     @Test
-    public void testContains() throws Exception {
+    void testContains() {
         assertFalse(stack.contains("notThere"));
         assertTrue(stack.contains(""));
         assertTrue(stack.contains(null));
@@ -65,7 +71,7 @@ public abstract class MyAbstractStackTest {
     }
 
     @Test
-    public void testIterator() throws Exception {
+    void testIterator() {
         Object[] objects = stack.toArray();
         Iterator<String> iterator = stack.iterator();
         for (Object object : objects) {
@@ -76,23 +82,23 @@ public abstract class MyAbstractStackTest {
     }
 
     @Test
-    public void testToArray() throws Exception {
+    void testToArray() {
         Object[] objects = stack.toArray();
         assertArrayEquals(objects, startArr);
-        assertTrue(Arrays.equals(objects, startArr));
+        assertArrayEquals(objects, startArr);
     }
 
     @Test
-    public void testToArrayWithParam() throws Exception {
+    void testToArrayWithParam() {
         String[] result = new String[startArr.length];
         String[] objects = stack.toArray(result);
         assertArrayEquals(objects, startArr);
-        assertTrue(Arrays.equals(objects, startArr));
-        assertTrue(result == objects);
+        assertArrayEquals(objects, startArr);
+        assertSame(result, objects);
     }
 
     @Test
-    public void testAdd() throws Exception {
+    void testAdd() {
         int size = stack.size();
         assertTrue(stack.add("a"));
         size++;
@@ -106,13 +112,13 @@ public abstract class MyAbstractStackTest {
         assertEquals("a", stack.peek());
     }
 
-    @Test(expected = UnsupportedOperationException.class)
-    public void testRemove() throws Exception {
-        stack.remove("a");
+    @Test
+    void testRemove() {
+        assertThrows(UnsupportedOperationException.class, () -> stack.remove("a"));
     }
 
     @Test
-    public void testAddAll() throws Exception {
+    void testAddAll() {
         SimpleStack<String> copy = getDefaultStack();
         copy.add("a");
         copy.add("b");
@@ -120,18 +126,18 @@ public abstract class MyAbstractStackTest {
         assertEquals(copy, stack);
     }
 
-    @Test(expected = UnsupportedOperationException.class)
-    public void testRemoveAll() throws Exception {
-        stack.removeAll(Collections.EMPTY_LIST);
-    }
-
-    @Test(expected = UnsupportedOperationException.class)
-    public void testRetainAll() throws Exception {
-        stack.retainAll(Collections.EMPTY_LIST);
+    @Test
+    void testRemoveAll() {
+        assertThrows(UnsupportedOperationException.class, () -> stack.removeAll(Collections.emptyList()));
     }
 
     @Test
-    public void testClear() throws Exception {
+    void testRetainAll() {
+        assertThrows(UnsupportedOperationException.class, () -> stack.retainAll(Collections.emptyList()));
+    }
+
+    @Test
+    void testClear() {
         stack.clear();
         assertEquals(0, stack.size());
         stack.add("a");
@@ -139,7 +145,7 @@ public abstract class MyAbstractStackTest {
     }
 
     @Test
-    public void testPush() throws Exception {
+    void testPush() {
         int size = stack.size();
         stack.push("a");
         size++;
@@ -150,17 +156,18 @@ public abstract class MyAbstractStackTest {
         stack.add("c");
     }
 
-    @Test(expected = NoSuchElementException.class)
-    public void testPop() throws Exception {
+    @Test
+    void testPop() {
         assertEquals("a", stack.pop());
         assertEquals("b", stack.pop());
         assertEquals("a", stack.pop());
         stack.clear();
-        stack.pop();
+
+        assertThrows(NoSuchElementException.class, () -> stack.pop());
     }
 
     @Test
-    public void testOffer() throws Exception {
+    void testOffer() {
         assertTrue(stack.offer("newValue1"));
         assertEquals("newValue1", stack.pop());
         assertTrue(stack.offer("newValue2"));
@@ -172,7 +179,7 @@ public abstract class MyAbstractStackTest {
     }
 
     @Test
-    public void testPoll() throws Exception {
+    void testPoll() {
         assertTrue(stack.poll());
         assertTrue(stack.poll());
         assertTrue(stack.poll());
@@ -180,17 +187,18 @@ public abstract class MyAbstractStackTest {
         assertFalse(stack.poll());
     }
 
-    @Test(expected = NoSuchElementException.class)
-    public void testElement() throws Exception {
+    @Test
+    void testElement() {
         assertEquals("a", stack.element());
         assertEquals("b", stack.element());
         assertEquals("a", stack.element());
         stack.clear();
-        stack.element();
+
+        assertThrows(NoSuchElementException.class, () -> stack.element());
     }
 
     @Test
-    public void testPeek() throws Exception {
+    void testPeek() {
         assertEquals("a", stack.peek());
         assertEquals("b", stack.peek());
         assertEquals("a", stack.peek());

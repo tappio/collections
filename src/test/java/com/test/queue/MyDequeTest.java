@@ -1,20 +1,28 @@
 package com.test.queue;
 
-import org.junit.Before;
-import org.junit.Test;
+import java.util.Arrays;
+import java.util.Deque;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
-import java.util.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class MyDequeTest {
+class MyDequeTest {
 
+    private final String[] startArr = {"a", "b", "a", "d", "a", null, "k", "", "s", "z"};
     private Deque<String> deque;
-    private String[] startArr = {"a", "b", "a", "d", "a", null, "k", "", "s", "z"};
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    void setUp() {
         deque = getDefaultDeque();
     }
 
@@ -38,7 +46,7 @@ public class MyDequeTest {
     }
 
     @Test
-    public void testAddFirst() throws Exception {
+    void testAddFirst() {
         int startSize = deque.size();
         deque.addFirst("newValue");
         assertTrue(deque.contains("newValue"));
@@ -48,11 +56,11 @@ public class MyDequeTest {
         deque.addFirst(null);
         assertTrue(deque.contains(null));
         assertEquals(startSize + 2, deque.size());
-        assertEquals(null, deque.getFirst());
+        assertNull(deque.getFirst());
     }
 
     @Test
-    public void testAddLast() throws Exception {
+    void testAddLast() {
         int startSize = deque.size();
         deque.addLast("newValue");
         assertTrue(deque.contains("newValue"));
@@ -62,11 +70,11 @@ public class MyDequeTest {
         deque.addLast(null);
         assertTrue(deque.contains(null));
         assertEquals(startSize + 2, deque.size());
-        assertEquals(null, deque.getLast());
+        assertNull(deque.getLast());
     }
 
     @Test
-    public void testOfferFirst() throws Exception {
+    void testOfferFirst() {
         int startSize = deque.size();
         assertTrue(deque.offerFirst("newValue"));
         assertTrue(deque.contains("newValue"));
@@ -76,11 +84,11 @@ public class MyDequeTest {
         assertTrue(deque.offerFirst(null));
         assertTrue(deque.contains(null));
         assertEquals(startSize + 2, deque.size());
-        assertEquals(null, deque.getFirst());
+        assertNull(deque.getFirst());
     }
 
     @Test
-    public void testOfferLast() throws Exception {
+    void testOfferLast() {
         int startSize = deque.size();
         assertTrue(deque.offerLast("newValue"));
         assertTrue(deque.contains("newValue"));
@@ -90,47 +98,49 @@ public class MyDequeTest {
         assertTrue(deque.offerLast(null));
         assertTrue(deque.contains(null));
         assertEquals(startSize + 2, deque.size());
-        assertEquals(null, deque.getLast());
+        assertNull(deque.getLast());
     }
 
-    @Test(expected = NoSuchElementException.class)
-    public void testRemoveFirst() throws Exception {
+    @Test
+    void testRemoveFirst() {
         assertEquals("a", deque.removeFirst());
         assertEquals("b", deque.removeFirst());
         assertEquals("a", deque.removeFirst());
         assertEquals("d", deque.removeFirst());
         assertEquals("a", deque.removeFirst());
-        assertEquals(null, deque.removeFirst());
+        assertNull(deque.removeFirst());
         assertEquals("k", deque.removeFirst());
         assertEquals("", deque.removeFirst());
         assertEquals("s", deque.removeFirst());
         assertEquals("z", deque.removeFirst());
-        deque.removeFirst();
+
+        assertThrows(NoSuchElementException.class, () -> deque.removeFirst());
     }
 
-    @Test(expected = NoSuchElementException.class)
-    public void testRemoveLast() throws Exception {
+    @Test
+    void testRemoveLast() {
         assertEquals("z", deque.removeLast());
         assertEquals("s", deque.removeLast());
         assertEquals("", deque.removeLast());
         assertEquals("k", deque.removeLast());
-        assertEquals(null, deque.removeLast());
+        assertNull(deque.removeLast());
         assertEquals("a", deque.removeLast());
         assertEquals("d", deque.removeLast());
         assertEquals("a", deque.removeLast());
         assertEquals("b", deque.removeLast());
         assertEquals("a", deque.removeLast());
-        deque.removeLast();
+
+        assertThrows(NoSuchElementException.class, () -> deque.removeLast());
     }
 
     @Test
-    public void testPollFirst() throws Exception {
+    void testPollFirst() {
         assertEquals("a", deque.pollFirst());
         assertEquals("b", deque.pollFirst());
         assertEquals("a", deque.pollFirst());
         assertEquals("d", deque.pollFirst());
         assertEquals("a", deque.pollFirst());
-        assertEquals(null, deque.pollFirst());
+        assertNull(deque.pollFirst());
         assertEquals("k", deque.pollFirst());
         assertEquals("", deque.pollFirst());
         assertEquals("s", deque.pollFirst());
@@ -139,12 +149,12 @@ public class MyDequeTest {
     }
 
     @Test
-    public void testPollLast() throws Exception {
+    void testPollLast() {
         assertEquals("z", deque.pollLast());
         assertEquals("s", deque.pollLast());
         assertEquals("", deque.pollLast());
         assertEquals("k", deque.pollLast());
-        assertEquals(null, deque.pollLast());
+        assertNull(deque.pollLast());
         assertEquals("a", deque.pollLast());
         assertEquals("d", deque.pollLast());
         assertEquals("a", deque.pollLast());
@@ -153,30 +163,32 @@ public class MyDequeTest {
         assertNull(deque.pollLast());
     }
 
-    @Test(expected = NoSuchElementException.class)
-    public void testGetFirst() throws Exception {
+    @Test
+    void testGetFirst() {
         assertEquals("a", deque.getFirst());
         assertEquals("a", deque.getFirst());
         deque.addFirst("newValue");
         assertEquals("newValue", deque.getFirst());
         assertEquals("newValue", deque.getFirst());
         deque.clear();
-        deque.getFirst();
+
+        assertThrows(NoSuchElementException.class, () -> deque.getFirst());
     }
 
-    @Test(expected = NoSuchElementException.class)
-    public void testGetLast() throws Exception {
+    @Test
+    void testGetLast() {
         assertEquals("z", deque.getLast());
         assertEquals("z", deque.getLast());
         deque.addLast("newValue");
         assertEquals("newValue", deque.getLast());
         assertEquals("newValue", deque.getLast());
         deque.clear();
-        deque.getLast();
+
+        assertThrows(NoSuchElementException.class, () -> deque.getLast());
     }
 
     @Test
-    public void testPeekFirst() throws Exception {
+    void testPeekFirst() {
         assertEquals("a", deque.peekFirst());
         assertEquals("a", deque.peekFirst());
         deque.addFirst("newValue");
@@ -187,7 +199,7 @@ public class MyDequeTest {
     }
 
     @Test
-    public void testPeekLast() throws Exception {
+    void testPeekLast() {
         assertEquals("z", deque.peekLast());
         assertEquals("z", deque.peekLast());
         deque.addLast("newValue");
@@ -198,7 +210,7 @@ public class MyDequeTest {
     }
 
     @Test
-    public void testRemoveFirstOccurrence() throws Exception {
+    void testRemoveFirstOccurrence() {
         int size = deque.size();
         assertEquals("a", deque.getFirst());
         assertTrue(deque.removeFirstOccurrence("a"));
@@ -212,7 +224,7 @@ public class MyDequeTest {
     }
 
     @Test
-    public void testRemoveLastOccurrence() throws Exception {
+    void testRemoveLastOccurrence() {
         int size = deque.size();
         assertEquals("z", deque.getLast());
         assertTrue(deque.removeLastOccurrence("z"));
@@ -226,7 +238,7 @@ public class MyDequeTest {
     }
 
     @Test
-    public void testAdd() throws Exception {
+    void testAdd() {
         int size = 0;
         deque.clear();
         assertTrue(deque.add("a"));
@@ -240,7 +252,7 @@ public class MyDequeTest {
     }
 
     @Test
-    public void testOffer() throws Exception {
+    void testOffer() {
         int size = 0;
         deque.clear();
         assertTrue(deque.offer("a"));
@@ -253,17 +265,18 @@ public class MyDequeTest {
         assertEquals(size, deque.size());
     }
 
-    @Test(expected = NoSuchElementException.class)
-    public void testRemove() throws Exception {
+    @Test
+    void testRemove() {
         assertEquals("a", deque.remove());
         assertEquals("b", deque.remove());
         assertEquals("a", deque.remove());
         deque.clear();
-        deque.remove();
+
+        assertThrows(NoSuchElementException.class, () -> deque.remove());
     }
 
     @Test
-    public void testPoll() throws Exception {
+    void testPoll() {
         assertEquals("a", deque.poll());
         assertEquals("b", deque.poll());
         assertEquals("a", deque.poll());
@@ -271,19 +284,20 @@ public class MyDequeTest {
         assertNull(deque.poll());
     }
 
-    @Test(expected = NoSuchElementException.class)
-    public void testElement() throws Exception {
+    @Test
+    void testElement() {
         assertEquals("a", deque.element());
         assertEquals("a", deque.element());
         deque.addFirst("newValue");
         assertEquals("newValue", deque.element());
         assertEquals("newValue", deque.element());
         deque.clear();
-        deque.element();
+
+        assertThrows(NoSuchElementException.class, () -> deque.element());
     }
 
     @Test
-    public void testPeek() throws Exception {
+    void testPeek() {
         assertEquals("a", deque.peek());
         assertEquals("a", deque.peek());
         deque.addFirst("newValue");
@@ -294,7 +308,7 @@ public class MyDequeTest {
     }
 
     @Test
-    public void testPush() throws Exception {
+    void testPush() {
         int size = 0;
         deque.clear();
         deque.push("a");
@@ -307,23 +321,24 @@ public class MyDequeTest {
         assertEquals(size, deque.size());
         deque.push(null);
         size++;
-        assertEquals(null, deque.getFirst());
+        assertNull(deque.getFirst());
         assertEquals(size, deque.size());
     }
 
-    @Test(expected = NoSuchElementException.class)
-    public void testPop() throws Exception {
+    @Test
+    void testPop() {
         assertEquals("a", deque.pop());
         assertEquals("b", deque.pop());
         deque.addFirst("newValue");
         assertEquals("newValue", deque.pop());
         assertEquals("a", deque.pop());
         deque.clear();
-        deque.pop();
+
+        assertThrows(NoSuchElementException.class, () -> deque.pop());
     }
 
     @Test
-    public void testRemoveWithParam() throws Exception {
+    void testRemoveWithParam() {
         int size = deque.size();
         assertEquals("a", deque.getFirst());
         assertTrue(deque.remove("a"));
@@ -337,7 +352,7 @@ public class MyDequeTest {
     }
 
     @Test
-    public void testAddAll() throws Exception {
+    void testAddAll() {
         Deque<String> copy = getDefaultDeque();
         copy.add("a");
         copy.add("b");
@@ -347,7 +362,7 @@ public class MyDequeTest {
     }
 
     @Test
-    public void testRemoveAll() throws Exception {
+    void testRemoveAll() {
         Deque<String> copy = getDefaultDeque();
         copy.remove("a");
         copy.remove("b");
@@ -357,7 +372,7 @@ public class MyDequeTest {
     }
 
     @Test
-    public void testRetainAll() throws Exception {
+    void testRetainAll() {
         Deque<String> newDeque = new MyDeque<>();
         newDeque.add("k");
         newDeque.add("s");
@@ -367,7 +382,7 @@ public class MyDequeTest {
     }
 
     @Test
-    public void testClear() throws Exception {
+    void testClear() {
         deque.clear();
         assertEquals(0, deque.size());
         deque.add("a");
@@ -375,7 +390,7 @@ public class MyDequeTest {
     }
 
     @Test
-    public void testContains() throws Exception {
+    void testContains() {
         assertFalse(deque.contains("notThere"));
         assertTrue(deque.contains(""));
         assertTrue(deque.contains(null));
@@ -383,7 +398,7 @@ public class MyDequeTest {
     }
 
     @Test
-    public void testSize() throws Exception {
+    void testSize() {
         int size = deque.size();
         assertEquals("a", deque.getFirst());
         assertEquals(size, deque.size());
@@ -396,7 +411,7 @@ public class MyDequeTest {
     }
 
     @Test
-    public void testIterator() throws Exception {
+    void testIterator() {
         Object[] objects = deque.toArray();
         Iterator<String> iterator = deque.iterator();
         for (Object object : objects) {
@@ -409,22 +424,22 @@ public class MyDequeTest {
     }
 
     @Test
-    public void testToArray() throws Exception {
+    void testToArray() {
         Object[] objects = deque.toArray();
-        assertEquals(true, Arrays.equals(objects, startArr));
+        assertArrayEquals(objects, startArr);
     }
 
     @Test
-    public void testToArrayWithParam() throws Exception {
+    void testToArrayWithParam() {
         String[] result = new String[startArr.length];
         String[] objects = deque.toArray(result);
-        assertEquals(true, Arrays.equals(objects, startArr));
-        assertEquals(true, result == objects);
+        assertArrayEquals(objects, startArr);
+        assertSame(result, objects);
     }
 
-    @Test(expected = UnsupportedOperationException.class)
-    public void testDescendingIterator() throws Exception {
-        deque.descendingIterator();
+    @Test
+    void testDescendingIterator() {
+        assertThrows(UnsupportedOperationException.class, () -> deque.descendingIterator());
     }
 
 }

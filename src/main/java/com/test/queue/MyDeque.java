@@ -1,11 +1,11 @@
 package com.test.queue;
 
-import com.test.MyAbstractCollection;
-
 import java.util.Collection;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+
+import com.test.MyAbstractCollection;
 
 public class MyDeque<E> extends MyAbstractCollection<E> implements Deque<E> {
 

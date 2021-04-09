@@ -1,8 +1,11 @@
 package com.test.set;
 
-import com.test.MyAbstractCollection;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.Set;
 
-import java.util.*;
+import com.test.MyAbstractCollection;
 
 public class MyHashSet<E> extends MyAbstractCollection<E> implements Set<E> {
 
@@ -180,7 +183,6 @@ public class MyHashSet<E> extends MyAbstractCollection<E> implements Set<E> {
                 current.next = null;
                 current = next;
             }
-            node = null;
         }
         table = new Node[capacity];
         size = 0;
@@ -227,7 +229,7 @@ public class MyHashSet<E> extends MyAbstractCollection<E> implements Set<E> {
                 E o = (E) current.value;
                 int index = getIndex(o);
                 if (newTable[index] == null) {
-                    newTable[index] = new Node<E>(o, null);
+                    newTable[index] = new Node<>(o, null);
                 } else {
                     Node newHead = newTable[index];
                     Node<E> newNode = new Node<E>(o, newHead);
@@ -320,7 +322,7 @@ public class MyHashSet<E> extends MyAbstractCollection<E> implements Set<E> {
                 else
                     break;
             }
-            return (E) lastReturned.value;
+            return lastReturned.value;
         }
 
         @Override

@@ -1,8 +1,12 @@
 package com.test.queue;
 
-import com.test.MyAbstractCollection;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.Queue;
 
-import java.util.*;
+import com.test.MyAbstractCollection;
 
 public class MyPriorityQueue<E> extends MyAbstractCollection<E> implements Queue<E> {
 
@@ -292,9 +296,8 @@ public class MyPriorityQueue<E> extends MyAbstractCollection<E> implements Queue
         Node<E> current;
         Node lastReturned;
 
-        @SuppressWarnings("unchecked")
         MyPriorityQueueIterator() {
-            current = (Node<E>) first;
+            current = first;
         }
 
         @Override

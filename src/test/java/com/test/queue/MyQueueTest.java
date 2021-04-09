@@ -1,22 +1,28 @@
 package com.test.queue;
 
-import org.junit.Before;
-import org.junit.Test;
-
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Queue;
 
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class MyQueueTest {
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+class MyQueueTest {
+
+    private final String[] startArr = {"a", "b", "a", "d", "a", null, "k", "", "s", "z"};
     private Queue<String> queue;
-    private String[] startArr = {"a", "b", "a", "d", "a", null, "k", "", "s", "z"};
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    void setUp() {
         queue = getDefaultQueue();
     }
 
@@ -52,7 +58,7 @@ public class MyQueueTest {
     }
 
     @Test
-    public void testSize() throws Exception {
+    void testSize() {
         assertEquals(10, queue.size());
         queue.add("AAA");
         queue.add("BBB");
@@ -68,7 +74,7 @@ public class MyQueueTest {
     }
 
     @Test
-    public void testContains() throws Exception {
+    void testContains() {
         assertFalse(queue.contains("notThere"));
         assertTrue(queue.contains(""));
         assertTrue(queue.contains(null));
@@ -76,7 +82,7 @@ public class MyQueueTest {
     }
 
     @Test
-    public void testIterator() throws Exception {
+    void testIterator() {
         Object[] objects = queue.toArray();
         Iterator<String> iterator = queue.iterator();
         for (Object object : objects) {
@@ -89,29 +95,29 @@ public class MyQueueTest {
     }
 
     @Test
-    public void testToArray() throws Exception {
+    void testToArray() {
         Object[] result = queue.toArray();
         assertArrayEquals(startArr, result);
     }
 
     @Test
-    public void testToArrayWithParam() throws Exception {
+    void testToArrayWithParam() {
         String[] result = new String[startArr.length];
         String[] objects = queue.toArray(result);
         assertArrayEquals(startArr, objects);
-        assertTrue(result == objects);
+        assertSame(result, objects);
     }
 
     @Test
-    public void testAdd() throws Exception {
+    void testAdd() {
         int startSize = queue.size();
         queue.add("newValue");
         assertTrue(queue.contains("newValue"));
-        assertTrue(queue.size() == startSize + 1);
+        assertEquals(queue.size(), startSize + 1);
 
         queue.add(null);
         assertTrue(queue.contains(null));
-        assertTrue(queue.size() == startSize + 2);
+        assertEquals(queue.size(), startSize + 2);
 
         long startTime = System.currentTimeMillis();
         addElements(queue, 1_000_000);
@@ -120,19 +126,19 @@ public class MyQueueTest {
     }
 
     @Test
-    public void testRemove() throws Exception {
+    void testRemove() {
         int startSize = queue.size();
         queue.remove("a");
-        assertTrue(queue.size() == startSize - 1);
+        assertEquals(queue.size(), startSize - 1);
 
         queue.remove("b");
-        assertTrue(queue.size() == startSize - 2);
+        assertEquals(queue.size(), startSize - 2);
 
         queue.remove("notThere");
-        assertTrue(queue.size() == startSize - 2);
+        assertEquals(queue.size(), startSize - 2);
 
         queue.remove(null);
-        assertTrue(queue.size() == startSize - 3);
+        assertEquals(queue.size(), startSize - 3);
 
         int elNum = 1_000_000;
         addElements(queue, elNum);
@@ -143,7 +149,7 @@ public class MyQueueTest {
     }
 
     @Test
-    public void testAddAll() throws Exception {
+    void testAddAll() {
         Queue<String> copy = getDefaultQueue();
         copy.add("a");
         copy.add("b");
@@ -153,7 +159,7 @@ public class MyQueueTest {
     }
 
     @Test
-    public void testRemoveAll() throws Exception {
+    void testRemoveAll() {
         Queue<String> copy = getDefaultQueue();
         copy.remove("a");
         copy.remove("b");
@@ -163,7 +169,7 @@ public class MyQueueTest {
     }
 
     @Test
-    public void testRetainAll() throws Exception {
+    void testRetainAll() {
         Queue<String> newQueue = new MyQueue<>();
         newQueue.add("k");
         newQueue.add("s");
@@ -173,7 +179,7 @@ public class MyQueueTest {
     }
 
     @Test
-    public void testClear() throws Exception {
+    void testClear() {
         queue.clear();
         assertEquals(0, queue.size());
         assertTrue(queue.isEmpty());
@@ -183,17 +189,17 @@ public class MyQueueTest {
     }
 
     @Test
-    public void testOffer() throws Exception {
+    void testOffer() {
         Queue<String> q = new MyQueue<>(2);
         assertTrue(q.offer("a"));
         assertTrue(q.offer("b"));
         assertFalse(q.offer("c"));
         assertFalse(q.offer("d"));
-        assertTrue(q.size() == 2);
+        assertEquals(2, q.size());
     }
 
     @Test
-    public void testRemoveWithoutParam() throws Exception {
+    void testRemoveWithoutParam() {
         Queue<String> q = new MyQueue<>();
         q.offer("a");
         q.offer("b");
@@ -204,15 +210,16 @@ public class MyQueueTest {
         assertTrue(q.isEmpty());
     }
 
-    @Test(expected = NoSuchElementException.class)
-    public void testRemoveException() throws Exception {
+    @Test
+    void testRemoveException() {
         Queue<String> q = new MyQueue<>();
         assertTrue(q.isEmpty());
-        q.remove();
+
+        assertThrows(NoSuchElementException.class, q::remove);
     }
 
     @Test
-    public void testPoll() throws Exception {
+    void testPoll() {
         Queue<String> q = new MyQueue<>();
         q.offer("a");
         q.offer("b");
@@ -225,7 +232,7 @@ public class MyQueueTest {
     }
 
     @Test
-    public void testElement() throws Exception {
+    void testElement() {
         Queue<String> q = new MyQueue<>();
         q.offer("a");
         q.offer("b");
@@ -236,15 +243,16 @@ public class MyQueueTest {
         assertEquals(1, q.size());
     }
 
-    @Test(expected = NoSuchElementException.class)
-    public void testElementException() throws Exception {
+    @Test
+    void testElementException() {
         Queue<String> q = new MyQueue<>();
         assertTrue(q.isEmpty());
-        q.element();
+
+        assertThrows(NoSuchElementException.class, q::element);
     }
 
     @Test
-    public void testPeek() throws Exception {
+    void testPeek() {
         Queue<String> q = new MyQueue<>();
         q.offer("a");
         q.offer("b");

@@ -1,20 +1,27 @@
 package com.test.tree;
 
-import org.junit.Before;
-import org.junit.Test;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
-import java.util.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class MyTreeSetTest {
+class MyTreeSetTest {
 
     private static final List<String> TRAVERSAL_LIST = Arrays.asList("F", "D", "J", "B", "E", "G", "K", "A", "C", "I", "H");
 
     private Set<String> set;
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    void setUp() {
         set = getDefaultSet();
     }
 
@@ -52,7 +59,7 @@ public class MyTreeSetTest {
     }
 
     @Test
-    public void testLevelOrderTraversal() throws Exception {
+    void testLevelOrderTraversal() {
         System.out.println("LevelOrderTraversal");
         MyTreeSet<String> stringSet = getTraversalSet();
         List<String> strings = stringSet.levelOrderTraversal();
@@ -60,7 +67,7 @@ public class MyTreeSetTest {
     }
 
     @Test
-    public void testPreOrderTraversal() throws Exception {
+    void testPreOrderTraversal() {
         System.out.println("PreOrderTraversal");
         MyTreeSet<String> stringSet = getTraversalSet();
         List<String> strings = stringSet.preOrderTraversal();
@@ -68,7 +75,7 @@ public class MyTreeSetTest {
     }
 
     @Test
-    public void testInOrderTraversal() throws Exception {
+    void testInOrderTraversal() {
         System.out.println("InOrderTraversal");
         MyTreeSet<String> stringSet = getTraversalSet();
         List<String> strings = stringSet.inOrderTraversal();
@@ -76,7 +83,7 @@ public class MyTreeSetTest {
     }
 
     @Test
-    public void postInOrderTraversal() throws Exception {
+    void postInOrderTraversal() {
         System.out.println("PostOrderTraversal");
         MyTreeSet<String> stringSet = getTraversalSet();
         List<String> strings = stringSet.postOrderTraversal();
@@ -84,7 +91,7 @@ public class MyTreeSetTest {
     }
 
     @Test
-    public void testSize() throws Exception {
+    void testSize() {
         assertEquals(4, set.size());
         set.add("AAA");
         set.add("BBB");
@@ -100,14 +107,14 @@ public class MyTreeSetTest {
     }
 
     @Test
-    public void testContains() throws Exception {
+    void testContains() {
         assertFalse(set.contains("notThere"));
         assertTrue(set.contains("b"));
         assertTrue(set.contains("a"));
     }
 
     @Test
-    public void testIterator() throws Exception {
+    void testIterator() {
         Object[] objects = set.toArray();
         Iterator<String> iterator = set.iterator();
         for (Object object : objects) {
@@ -120,7 +127,7 @@ public class MyTreeSetTest {
     }
 
     @Test
-    public void testToArray() throws Exception {
+    void testToArray() {
         final Object[] result = new Object[set.size()];
         int i = 0;
         for (String s : set) {
@@ -131,7 +138,7 @@ public class MyTreeSetTest {
     }
 
     @Test
-    public void testToArrayWithParam() throws Exception {
+    void testToArrayWithParam() {
         String[] result = new String[set.size()];
         set.toArray(result);
 
@@ -145,15 +152,15 @@ public class MyTreeSetTest {
     }
 
     @Test
-    public void testAdd() throws Exception {
+    void testAdd() {
         int startSize = set.size();
         set.add("newValue");
         assertTrue(set.contains("newValue"));
-        assertTrue(set.size() == startSize + 1);
+        assertEquals(set.size(), startSize + 1);
 
         set.add("a");
         assertTrue(set.contains("a"));
-        assertTrue(set.size() == startSize + 1);
+        assertEquals(set.size(), startSize + 1);
 
         long startTime = System.currentTimeMillis();
         addElements(set, 10_000);
@@ -162,16 +169,16 @@ public class MyTreeSetTest {
     }
 
     @Test
-    public void testRemove() throws Exception {
+    void testRemove() {
         int startSize = set.size();
         set.remove("a");
-        assertEquals(true, set.size() == startSize - 1);
+        assertEquals(set.size(), startSize - 1);
 
         set.remove("b");
-        assertEquals(true, set.size() == startSize - 2);
+        assertEquals(set.size(), startSize - 2);
 
         set.remove("notThere");
-        assertEquals(true, set.size() == startSize - 2);
+        assertEquals(set.size(), startSize - 2);
 
         int elNum = 10_000;
         addElements(set, elNum);
@@ -182,13 +189,13 @@ public class MyTreeSetTest {
     }
 
     @Test
-    public void testContainsAll() throws Exception {
+    void testContainsAll() {
         assertTrue(set.containsAll(Arrays.asList("a", "b", "z", "s")));
         assertFalse(set.containsAll(Arrays.asList("a", "b", "z", "s", "notThere")));
     }
 
     @Test
-    public void testAddAll() throws Exception {
+    void testAddAll() {
         Set<String> copy = getDefaultSet();
         copy.add("k");
         copy.add("l");
@@ -199,7 +206,7 @@ public class MyTreeSetTest {
     }
 
     @Test
-    public void testRetainAll() throws Exception {
+    void testRetainAll() {
         Set<String> newSet = new HashSet<>();
         newSet.add("a");
         newSet.add("b");
@@ -208,7 +215,7 @@ public class MyTreeSetTest {
     }
 
     @Test
-    public void testRemoveAll() throws Exception {
+    void testRemoveAll() {
         Set<String> copy = getDefaultSet();
         copy.remove("a");
         copy.remove("b");
@@ -218,7 +225,7 @@ public class MyTreeSetTest {
     }
 
     @Test
-    public void testClear() throws Exception {
+    void testClear() {
         set.clear();
         assertEquals(0, set.size());
         set.add("a");

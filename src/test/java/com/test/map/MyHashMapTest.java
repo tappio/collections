@@ -1,22 +1,24 @@
 package com.test.map;
 
-import org.junit.Before;
-import org.junit.Test;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class MyHashMapTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-    private Map<String, String> map = new MyHashMap<>();
+class MyHashMapTest {
 
-    @Before
-    public void setUp() throws Exception {
+    private final Map<String, String> map = new MyHashMap<>();
+
+    @BeforeEach
+    void setUp() {
         fillWithDefaultData(map);
     }
 
@@ -48,7 +50,7 @@ public class MyHashMapTest {
     }
 
     @Test
-    public void testSize() throws Exception {
+    void testSize() {
         assertEquals(8, map.size());
         map.put("AAA", "BBB");
         map.put("BBB", "CCC");
@@ -64,7 +66,7 @@ public class MyHashMapTest {
     }
 
     @Test
-    public void testIsEmpty() throws Exception {
+    void testIsEmpty() {
         assertFalse(map.isEmpty());
         map.clear();
         assertTrue(map.isEmpty());
@@ -73,7 +75,7 @@ public class MyHashMapTest {
     }
 
     @Test
-    public void testContainsKey() throws Exception {
+    void testContainsKey() {
         assertTrue(map.containsKey("a"));
         assertTrue(map.containsKey("b"));
         assertTrue(map.containsKey(null));
@@ -84,7 +86,7 @@ public class MyHashMapTest {
     }
 
     @Test
-    public void testContainsValue() throws Exception {
+    void testContainsValue() {
         assertFalse(map.containsValue("a"));
         assertFalse(map.containsValue("b"));
         assertTrue(map.containsValue(null));
@@ -95,7 +97,7 @@ public class MyHashMapTest {
     }
 
     @Test
-    public void testGet() throws Exception {
+    void testGet() {
         assertEquals("AAA", map.get("a"));
         assertEquals("BBB", map.get("b"));
         assertEquals("", map.get(""));
@@ -104,7 +106,7 @@ public class MyHashMapTest {
     }
 
     @Test
-    public void testPut() throws Exception {
+    void testPut() {
         assertFalse(map.containsKey("c"));
         assertFalse(map.containsValue("CCC"));
         assertNull(map.put("c", "CCC"));
@@ -122,7 +124,7 @@ public class MyHashMapTest {
     }
 
     @Test
-    public void testRemove() throws Exception {
+    void testRemove() {
         assertEquals(8, map.size());
         assertEquals("AAA", map.remove("a"));
         assertEquals("BBB", map.remove("b"));
@@ -144,7 +146,7 @@ public class MyHashMapTest {
     }
 
     @Test
-    public void testPutAll() throws Exception {
+    void testPutAll() {
         Map<String, String> newMap = new HashMap<>();
         newMap.put("m", "MMM");
         newMap.put("n", "NNN");
@@ -161,7 +163,7 @@ public class MyHashMapTest {
     }
 
     @Test
-    public void testClear() throws Exception {
+    void testClear() {
         assertEquals(8, map.size());
         assertFalse(map.isEmpty());
         map.clear();
@@ -170,7 +172,7 @@ public class MyHashMapTest {
     }
 
     @Test
-    public void testKeySet() throws Exception {
+    void testKeySet() {
         Set<String> keySet = map.keySet();
         assertEquals(map.size(), keySet.size());
         for (String key : keySet) {
@@ -179,7 +181,7 @@ public class MyHashMapTest {
     }
 
     @Test
-    public void testValues() throws Exception {
+    void testValues() {
         Collection<String> values = map.values();
         assertEquals(map.size(), values.size());
         for (String value : values) {
@@ -188,7 +190,7 @@ public class MyHashMapTest {
     }
 
     @Test
-    public void testEntrySet() throws Exception {
+    void testEntrySet() {
         Set<Map.Entry<String, String>> entrySet = map.entrySet();
         assertEquals(map.size(), entrySet.size());
         for (Map.Entry<String, String> entry : entrySet) {

@@ -1,11 +1,11 @@
 package com.test.queue;
 
-import com.test.MyAbstractCollection;
-
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Queue;
+
+import com.test.MyAbstractCollection;
 
 public class MyQueue<E> extends MyAbstractCollection<E> implements Queue<E> {
 
@@ -214,10 +214,7 @@ public class MyQueue<E> extends MyAbstractCollection<E> implements Queue<E> {
     }
 
     private boolean isSpaceAvailable() {
-        if (maxSize > 0 && size == maxSize) {
-            return false;
-        }
-        return true;
+        return maxSize <= 0 || size != maxSize;
     }
 
     private void linkLast(E item) {

@@ -1,8 +1,15 @@
 package com.test.tree;
 
-import com.test.MyAbstractCollection;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Queue;
+import java.util.Set;
 
-import java.util.*;
+import com.test.MyAbstractCollection;
 
 public class MyTreeSet<E> extends MyAbstractCollection<E> implements Set<E> {
 
@@ -143,7 +150,7 @@ public class MyTreeSet<E> extends MyAbstractCollection<E> implements Set<E> {
         }
 
         if (root == null) {
-            root = new Entry<E>(e, null);
+            root = new Entry<>(e, null);
             size++;
             return true;
         }
@@ -354,10 +361,6 @@ public class MyTreeSet<E> extends MyAbstractCollection<E> implements Set<E> {
 
     private Entry findMinEntry() {
         return findMinEntry(root);
-    }
-
-    private Entry findMaxEntry() {
-        return findMaxEntry(root);
     }
 
     private static <E> Entry<E> successor(Entry<E> entry) {

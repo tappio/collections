@@ -1,13 +1,23 @@
 package com.test.queue;
 
-import org.junit.Before;
-import org.junit.Test;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.Queue;
 
-import java.util.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class MyPriorityQueueTest {
+class MyPriorityQueueTest {
 
     private static class IntegerComparator implements Comparator<Integer> {
         @Override
@@ -16,11 +26,11 @@ public class MyPriorityQueueTest {
         }
     }
 
+    private final Integer[] startArr = {100, 12, 10, 7, 5, 2, 0, -5, -23};
     private Queue<Integer> queue;
-    private Integer[] startArr = {100, 12, 10, 7, 5, 2, 0, -5, -23};
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    void setUp() {
         queue = getDefaultQueue();
     }
 
@@ -56,7 +66,7 @@ public class MyPriorityQueueTest {
     }
 
     @Test
-    public void testSize() throws Exception {
+    void testSize() {
         assertEquals(9, queue.size());
         queue.add(1);
         queue.add(2);
@@ -72,7 +82,7 @@ public class MyPriorityQueueTest {
     }
 
     @Test
-    public void testContains() throws Exception {
+    void testContains() {
         assertFalse(queue.contains(100500));
         assertTrue(queue.contains(10));
         assertTrue(queue.contains(5));
@@ -80,7 +90,7 @@ public class MyPriorityQueueTest {
     }
 
     @Test
-    public void testIterator() throws Exception {
+    void testIterator() {
         Object[] objects = queue.toArray();
         Iterator<Integer> iterator = queue.iterator();
         for (Object object : objects) {
@@ -93,29 +103,29 @@ public class MyPriorityQueueTest {
     }
 
     @Test
-    public void testToArray() throws Exception {
+    void testToArray() {
         Object[] result = queue.toArray();
         assertArrayEquals(startArr, result);
     }
 
     @Test
-    public void testToArrayWithParam() throws Exception {
+    void testToArrayWithParam() {
         Integer[] result = new Integer[startArr.length];
         Integer[] objects = queue.toArray(result);
         assertArrayEquals(startArr, objects);
-        assertTrue(result == objects);
+        assertSame(result, objects);
     }
 
     @Test
-    public void testAdd() throws Exception {
+    void testAdd() {
         int startSize = queue.size();
         queue.add(100500);
         assertTrue(queue.contains(100500));
-        assertTrue(queue.size() == startSize + 1);
+        assertEquals(queue.size(), startSize + 1);
 
         queue.add(100);
         assertTrue(queue.contains(100));
-        assertTrue(queue.size() == startSize + 2);
+        assertEquals(queue.size(), startSize + 2);
 
         long startTime = System.currentTimeMillis();
         addElements(queue, 10_000);
@@ -124,16 +134,16 @@ public class MyPriorityQueueTest {
     }
 
     @Test
-    public void testRemove() throws Exception {
+    void testRemove() {
         int startSize = queue.size();
         queue.remove(10);
-        assertTrue(queue.size() == startSize - 1);
+        assertEquals(queue.size(), startSize - 1);
 
         queue.remove(5);
-        assertTrue(queue.size() == startSize - 2);
+        assertEquals(queue.size(), startSize - 2);
 
         queue.remove(100500);
-        assertTrue(queue.size() == startSize - 2);
+        assertEquals(queue.size(), startSize - 2);
 
         int elNum = 10_000;
         addElements(queue, elNum);
@@ -144,7 +154,7 @@ public class MyPriorityQueueTest {
     }
 
     @Test
-    public void testAddAll() throws Exception {
+    void testAddAll() {
         Queue<Integer> copy = getDefaultQueue();
         copy.add(300);
         copy.add(400);
@@ -154,7 +164,7 @@ public class MyPriorityQueueTest {
     }
 
     @Test
-    public void testRemoveAll() throws Exception {
+    void testRemoveAll() {
         Queue<Integer> copy = getDefaultQueue();
         copy.remove(10);
         copy.remove(5);
@@ -164,7 +174,7 @@ public class MyPriorityQueueTest {
     }
 
     @Test
-    public void testRetainAll() throws Exception {
+    void testRetainAll() {
         Queue<Integer> newQueue = new MyPriorityQueue<>(new IntegerComparator());
         newQueue.add(10);
         newQueue.add(5);
@@ -174,7 +184,7 @@ public class MyPriorityQueueTest {
     }
 
     @Test
-    public void testClear() throws Exception {
+    void testClear() {
         queue.clear();
         assertEquals(0, queue.size());
         assertTrue(queue.isEmpty());
@@ -184,38 +194,39 @@ public class MyPriorityQueueTest {
     }
 
     @Test
-    public void testOffer() throws Exception {
+    void testOffer() {
         int startSize = queue.size();
         queue.offer(100500);
         assertTrue(queue.contains(100500));
-        assertTrue(queue.size() == startSize + 1);
+        assertEquals(queue.size(), startSize + 1);
 
         queue.offer(100);
         assertTrue(queue.contains(100));
-        assertTrue(queue.size() == startSize + 2);
+        assertEquals(queue.size(), startSize + 2);
 
         queue.offer(100);
         assertTrue(queue.contains(100));
-        assertTrue(queue.size() == startSize + 3);
+        assertEquals(queue.size(), startSize + 3);
     }
 
     @Test
-    public void testRemoveWithoutParam() throws Exception {
+    void testRemoveWithoutParam() {
         assertEquals(100, queue.remove().intValue());
         assertEquals(12, queue.remove().intValue());
         assertEquals(10, queue.remove().intValue());
         assertEquals(7, queue.remove().intValue());
     }
 
-    @Test(expected = NoSuchElementException.class)
-    public void testRemoveException() throws Exception {
+    @Test
+    void testRemoveException() {
         queue.clear();
         assertTrue(queue.isEmpty());
-        queue.remove();
+
+        assertThrows(NoSuchElementException.class, () -> queue.remove());
     }
 
     @Test
-    public void testPoll() throws Exception {
+    void testPoll() {
         assertEquals(100, queue.poll().intValue());
         assertEquals(12, queue.poll().intValue());
         assertEquals(10, queue.poll().intValue());
@@ -225,7 +236,7 @@ public class MyPriorityQueueTest {
     }
 
     @Test
-    public void testElement() throws Exception {
+    void testElement() {
         int size = queue.size();
         assertEquals(100, queue.element().intValue());
         assertEquals(size, queue.size());
@@ -234,15 +245,16 @@ public class MyPriorityQueueTest {
         assertEquals(size - 1, queue.size());
     }
 
-    @Test(expected = NoSuchElementException.class)
-    public void testElementException() throws Exception {
+    @Test
+    void testElementException() {
         queue.clear();
         assertTrue(queue.isEmpty());
-        queue.element();
+
+        assertThrows(NoSuchElementException.class, () -> queue.element());
     }
 
     @Test
-    public void testPeek() throws Exception {
+    void testPeek() {
         int size = queue.size();
         assertEquals(100, queue.peek().intValue());
         assertEquals(size, queue.size());

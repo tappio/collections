@@ -1,10 +1,10 @@
 package com.test.stack;
 
-import com.test.MyAbstractCollection;
-
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+
+import com.test.MyAbstractCollection;
 
 public class MyArrayStack<E> extends MyAbstractCollection<E> implements SimpleStack<E> {
 
@@ -12,8 +12,8 @@ public class MyArrayStack<E> extends MyAbstractCollection<E> implements SimpleSt
     private static final Object[] EMPTY_ARRAY = new Object[0];
 
     private int size;
-    private Object[] data;
-    private int maxSize;
+    private final Object[] data;
+    private final int maxSize;
 
     public MyArrayStack(int maxSize) {
         if (maxSize < 1) {
@@ -39,7 +39,7 @@ public class MyArrayStack<E> extends MyAbstractCollection<E> implements SimpleSt
 
     @Override
     public Iterator<E> iterator() {
-        return new MyArrayStackIterator<E>();
+        return new MyArrayStackIterator<>();
     }
 
     @Override

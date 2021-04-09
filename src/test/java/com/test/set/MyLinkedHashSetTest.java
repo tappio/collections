@@ -1,12 +1,12 @@
 package com.test.set;
 
-import org.junit.Test;
-
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Test;
 
-public class MyLinkedHashSetTest extends MyAbstractSetTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class MyLinkedHashSetTest extends MyAbstractSetTest {
 
     @Override
     protected Set<String> initSet() {
@@ -14,7 +14,7 @@ public class MyLinkedHashSetTest extends MyAbstractSetTest {
     }
 
     @Test
-    public void testOrder() throws Exception {
+    void testOrder() {
         String[] strings = {"a", "b", "c", "a", "d", null, "", "a", "b"};
         String[] stringsUnique = {"a", "b", "c", "d", null, ""};
         Set<String> set = new MyLinkedHashSet<>();

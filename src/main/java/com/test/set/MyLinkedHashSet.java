@@ -1,15 +1,18 @@
 package com.test.set;
 
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
 import com.test.MyAbstractCollection;
 import com.test.list.MyLinkedList;
-
-import java.util.*;
 
 public class MyLinkedHashSet<E> extends MyAbstractCollection<E> implements Set<E> {
 
     private static final int DEFAULT_CAPACITY = 16;
-    private Set<E> set;
-    private List<E> list;
+    private final Set<E> set;
+    private final List<E> list;
 
     public MyLinkedHashSet(int capacity) {
         if (capacity < 1) {
@@ -35,7 +38,7 @@ public class MyLinkedHashSet<E> extends MyAbstractCollection<E> implements Set<E
 
     @Override
     public Iterator<E> iterator() {
-        return new MyLinkedHashSetIterator<E>();
+        return new MyLinkedHashSetIterator<>();
     }
 
     @Override

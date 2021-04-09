@@ -1,10 +1,10 @@
 package com.test.stack;
 
-import com.test.MyAbstractCollection;
-
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+
+import com.test.MyAbstractCollection;
 
 public class MyStack<E> extends MyAbstractCollection<E> implements SimpleStack<E> {
 
@@ -22,7 +22,8 @@ public class MyStack<E> extends MyAbstractCollection<E> implements SimpleStack<E
     private Node<E> head;
     private int maxSize = -1;
 
-    public MyStack() {}
+    public MyStack() {
+    }
 
     public MyStack(int maxSize) {
         if (maxSize < 1) {
@@ -43,7 +44,7 @@ public class MyStack<E> extends MyAbstractCollection<E> implements SimpleStack<E
 
     @Override
     public Iterator<E> iterator() {
-        return new MyStackIterator<E>();
+        return new MyStackIterator<>();
     }
 
     @Override
@@ -174,15 +175,12 @@ public class MyStack<E> extends MyAbstractCollection<E> implements SimpleStack<E
     }
 
     private boolean isSpaceAvailable() {
-        if (maxSize > 0 && size == maxSize) {
-            return false;
-        }
-        return true;
+        return maxSize <= 0 || size != maxSize;
     }
 
     private void linkFirst(E e) {
         Node<E> first = head;
-        head = new Node<E>(e, first);
+        head = new Node<>(e, first);
         size++;
     }
 
