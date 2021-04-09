@@ -11,8 +11,8 @@ import com.test.MyAbstractCollection;
 
 public class MyArrayList<E> extends MyAbstractCollection<E> implements List<E> {
 
-    private static final Object[] EMPTY_ARRAY = new Object[0];
     private static final int DEFAULT_CAPACITY = 10;
+    private static final Object[] EMPTY_ARRAY = new Object[0];
 
     private int size;
     private Object[] data;
@@ -83,18 +83,21 @@ public class MyArrayList<E> extends MyAbstractCollection<E> implements List<E> {
 
     @Override
     public boolean addAll(Collection<? extends E> c) {
-        if (c == null || c.size() == 0)
+        if (c == null || c.size() == 0) {
             return false;
+        }
         ensureCapacity(c.size());
-        for (E e : c)
+        for (E e : c) {
             add(e);
+        }
         return true;
     }
 
     @Override
     public boolean addAll(int index, Collection<? extends E> c) {
-        if (c == null || c.size() == 0)
+        if (c == null || c.size() == 0) {
             return false;
+        }
 
         Object[] a = c.toArray();
         int numNew = a.length;
@@ -112,21 +115,24 @@ public class MyArrayList<E> extends MyAbstractCollection<E> implements List<E> {
 
     @Override
     public boolean removeAll(Collection<?> c) {
-        if (c == null || c.size() == 0)
+        if (c == null || c.size() == 0) {
             return false;
+        }
 
         for (Object o : c) {
             int index = indexOf(o);
-            if (index >= 0)
+            if (index >= 0) {
                 remove(index);
+            }
         }
         return true;
     }
 
     @Override
     public boolean retainAll(Collection<?> c) {
-        if (c == null || c.size() == 0)
+        if (c == null || c.size() == 0) {
             return false;
+        }
 
         final Object[] newData = new Object[size];
         int index = 0;
@@ -137,8 +143,9 @@ public class MyArrayList<E> extends MyAbstractCollection<E> implements List<E> {
                 index++;
             }
         }
-        if (index == 0)
+        if (index == 0) {
             return false;
+        }
 
         data = newData;
         size = index;
@@ -195,11 +202,17 @@ public class MyArrayList<E> extends MyAbstractCollection<E> implements List<E> {
     @Override
     public int indexOf(Object o) {
         if (o == null) {
-            for (int i = 0; i < size; i++)
-                if (data[i] == null) return i;
+            for (int i = 0; i < size; i++) {
+                if (data[i] == null) {
+                    return i;
+                }
+            }
         } else {
-            for (int i = 0; i < size; i++)
-                if (o.equals(data[i])) return i;
+            for (int i = 0; i < size; i++) {
+                if (o.equals(data[i])) {
+                    return i;
+                }
+            }
         }
         return -1;
     }
@@ -207,11 +220,17 @@ public class MyArrayList<E> extends MyAbstractCollection<E> implements List<E> {
     @Override
     public int lastIndexOf(Object o) {
         if (o == null) {
-            for (int i = size - 1; i >= 0; i--)
-                if (data[i] == null) return i;
+            for (int i = size - 1; i >= 0; i--) {
+                if (data[i] == null) {
+                    return i;
+                }
+            }
         } else {
-            for (int i = size - 1; i >= 0; i--)
-                if (o.equals(data[i])) return i;
+            for (int i = size - 1; i >= 0; i--) {
+                if (o.equals(data[i])) {
+                    return i;
+                }
+            }
         }
         return -1;
     }
@@ -230,9 +249,15 @@ public class MyArrayList<E> extends MyAbstractCollection<E> implements List<E> {
     @Override
     public List<E> subList(int fromIndex, int toIndex) {
         RuntimeException e = new IndexOutOfBoundsException();
-        if (fromIndex < 0) throw e;
-        if (toIndex > size) throw e;
-        if (fromIndex > toIndex) throw e;
+        if (fromIndex < 0) {
+            throw e;
+        }
+        if (toIndex > size) {
+            throw e;
+        }
+        if (fromIndex > toIndex) {
+            throw e;
+        }
 
         int newSize = toIndex - fromIndex;
         final Object[] copyData = new Object[newSize];
@@ -293,6 +318,7 @@ public class MyArrayList<E> extends MyAbstractCollection<E> implements List<E> {
             cursor = lastReturned;
             lastReturned = -1;
         }
+
     }
 
 }

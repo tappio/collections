@@ -11,18 +11,6 @@ import com.test.MyAbstractCollection;
 
 public class MyLinkedList<E> extends MyAbstractCollection<E> implements List<E> {
 
-    private static class Node<E> {
-        Node<E> previous;
-        E item;
-        Node<E> next;
-
-        private Node(Node<E> previous, E item, Node<E> next) {
-            this.previous = previous;
-            this.item = item;
-            this.next = next;
-        }
-    }
-
     private int size;
     private Node<E> first;
     private Node<E> last;
@@ -86,30 +74,20 @@ public class MyLinkedList<E> extends MyAbstractCollection<E> implements List<E> 
 
     @Override
     public boolean addAll(Collection<? extends E> c) {
-        if (c == null || c.size() == 0)
+        if (c == null || c.size() == 0) {
             return false;
-        for (E e : c)
-            linkLast(e);
-        return true;
-    }
-
-    @Override
-    public boolean addAll(int index, Collection<? extends E> c) {
-        if (c == null || c.size() == 0)
-            return false;
-
-        checkRange(index);
+        }
         for (E e : c) {
-            add(index, e);
-            index++;
+            linkLast(e);
         }
         return true;
     }
 
     @Override
     public boolean removeAll(Collection<?> c) {
-        if (c == null || c.size() == 0)
+        if (c == null || c.size() == 0) {
             return false;
+        }
 
         for (Object o : c) {
             Node<E> node = nodeOf(o);
@@ -123,8 +101,9 @@ public class MyLinkedList<E> extends MyAbstractCollection<E> implements List<E> 
     @SuppressWarnings("unchecked")
     @Override
     public boolean retainAll(Collection<?> c) {
-        if (c == null || c.size() == 0)
+        if (c == null || c.size() == 0) {
             return false;
+        }
 
         Node<E> first = null;
         Node<E> last = null;
@@ -165,6 +144,20 @@ public class MyLinkedList<E> extends MyAbstractCollection<E> implements List<E> 
         first = null;
         last = null;
         size = 0;
+    }
+
+    @Override
+    public boolean addAll(int index, Collection<? extends E> c) {
+        if (c == null || c.size() == 0) {
+            return false;
+        }
+
+        checkRange(index);
+        for (E e : c) {
+            add(index, e);
+            index++;
+        }
+        return true;
     }
 
     @Override
@@ -214,14 +207,16 @@ public class MyLinkedList<E> extends MyAbstractCollection<E> implements List<E> 
         int index = 0;
         if (o == null) {
             for (Node<E> node = first; node != null; node = node.next) {
-                if (node.item == null)
+                if (node.item == null) {
                     return index;
+                }
                 index++;
             }
         } else {
             for (Node<E> node = first; node != null; node = node.next) {
-                if (o.equals(node.item))
+                if (o.equals(node.item)) {
                     return index;
+                }
                 index++;
             }
         }
@@ -233,14 +228,16 @@ public class MyLinkedList<E> extends MyAbstractCollection<E> implements List<E> 
         int index = size - 1;
         if (o == null) {
             for (Node<E> node = last; node != null; node = node.previous) {
-                if (node.item == null)
+                if (node.item == null) {
                     return index;
+                }
                 index--;
             }
         } else {
             for (Node<E> node = last; node != null; node = node.previous) {
-                if (o.equals(node.item))
+                if (o.equals(node.item)) {
                     return index;
+                }
                 index--;
             }
         }
@@ -261,9 +258,15 @@ public class MyLinkedList<E> extends MyAbstractCollection<E> implements List<E> 
     @Override
     public List<E> subList(int fromIndex, int toIndex) {
         RuntimeException e = new IndexOutOfBoundsException();
-        if (fromIndex < 0) throw e;
-        if (toIndex > size) throw e;
-        if (fromIndex > toIndex) throw e;
+        if (fromIndex < 0) {
+            throw e;
+        }
+        if (toIndex > size) {
+            throw e;
+        }
+        if (fromIndex > toIndex) {
+            throw e;
+        }
 
         int newSize = toIndex - fromIndex;
         final Object[] copyData = new Object[newSize];
@@ -284,13 +287,15 @@ public class MyLinkedList<E> extends MyAbstractCollection<E> implements List<E> 
     private Node<E> nodeOf(Object o) {
         if (o == null) {
             for (Node<E> node = first; node != null; node = node.next) {
-                if (node.item == null)
+                if (node.item == null) {
                     return node;
+                }
             }
         } else {
             for (Node<E> node = first; node != null; node = node.next) {
-                if (o.equals(node.item))
+                if (o.equals(node.item)) {
                     return node;
+                }
             }
         }
         return null;
@@ -300,8 +305,9 @@ public class MyLinkedList<E> extends MyAbstractCollection<E> implements List<E> 
         checkRange(index);
         int i = 0;
         for (Node<E> current = first; current != null; current = current.next) {
-            if (index == i)
+            if (index == i) {
                 return current;
+            }
             i++;
         }
         return null;
@@ -353,6 +359,20 @@ public class MyLinkedList<E> extends MyAbstractCollection<E> implements List<E> 
         return element;
     }
 
+    private static class Node<E> {
+
+        E item;
+        Node<E> next;
+        Node<E> previous;
+
+        private Node(Node<E> previous, E item, Node<E> next) {
+            this.previous = previous;
+            this.item = item;
+            this.next = next;
+        }
+
+    }
+
     private class MyLinkedListIterator<E> implements Iterator<E> {
 
         Node<E> current;
@@ -390,6 +410,7 @@ public class MyLinkedList<E> extends MyAbstractCollection<E> implements List<E> 
             MyLinkedList.this.unlink(lastReturned);
             lastReturned = null;
         }
+
     }
 
 }

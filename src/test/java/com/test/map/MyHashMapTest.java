@@ -22,33 +22,6 @@ class MyHashMapTest {
         fillWithDefaultData(map);
     }
 
-    private void fillWithDefaultData(Map<String, String> map) {
-        map.put("a", "AAA");
-        map.put("b", "BBB");
-        map.put("a", "AAA");
-        map.put("d", "DDD");
-        map.put(null, null);
-        map.put("k", "KKK");
-        map.put("", "");
-        map.put("s", "SSS");
-        map.put("z", "ZZZ");
-    }
-
-    private void putElements(Map<String, String> map, int num) {
-        for (int i = 0; i < num; i++) {
-            String key = String.valueOf((char) i);
-            String value = String.valueOf((char) i % 250);
-            map.put(key, value);
-        }
-    }
-
-    private void removeElements(Map<String, String> map, int num) {
-        for (int i = 0; i < num; i++) {
-            String key = String.valueOf((char) i);
-            map.remove(key);
-        }
-    }
-
     @Test
     void testSize() {
         assertEquals(8, map.size());
@@ -196,6 +169,33 @@ class MyHashMapTest {
         for (Map.Entry<String, String> entry : entrySet) {
             assertTrue(map.containsKey(entry.getKey()));
             assertTrue(map.containsValue(entry.getValue()));
+        }
+    }
+
+    private void fillWithDefaultData(Map<String, String> map) {
+        map.put("a", "AAA");
+        map.put("b", "BBB");
+        map.put("a", "AAA");
+        map.put("d", "DDD");
+        map.put(null, null);
+        map.put("k", "KKK");
+        map.put("", "");
+        map.put("s", "SSS");
+        map.put("z", "ZZZ");
+    }
+
+    private void putElements(Map<String, String> map, int num) {
+        for (int i = 0; i < num; i++) {
+            String key = String.valueOf((char) i);
+            String value = String.valueOf((char) i % 250);
+            map.put(key, value);
+        }
+    }
+
+    private void removeElements(Map<String, String> map, int num) {
+        for (int i = 0; i < num; i++) {
+            String key = String.valueOf((char) i);
+            map.remove(key);
         }
     }
 

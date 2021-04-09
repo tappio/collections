@@ -11,9 +11,9 @@ public class MyArrayStack<E> extends MyAbstractCollection<E> implements SimpleSt
     private static final int DEFAULT_MAX_SIZE = 10;
     private static final Object[] EMPTY_ARRAY = new Object[0];
 
-    private int size;
     private final Object[] data;
     private final int maxSize;
+    private int size;
 
     public MyArrayStack(int maxSize) {
         if (maxSize < 1) {
@@ -44,8 +44,9 @@ public class MyArrayStack<E> extends MyAbstractCollection<E> implements SimpleSt
 
     @Override
     public Object[] toArray() {
-        if (size == 0)
+        if (size == 0) {
             return EMPTY_ARRAY;
+        }
         final Object[] result = new Object[size];
         for (int i = size - 1, j = 0; i >= 0; i--, j++) {
             result[j] = data[i];
@@ -77,11 +78,13 @@ public class MyArrayStack<E> extends MyAbstractCollection<E> implements SimpleSt
 
     @Override
     public boolean addAll(Collection<? extends E> c) {
-        if (c == null || c.size() == 0)
+        if (c == null || c.size() == 0) {
             return false;
+        }
         if (spaceAvailable(c.size())) {
-            for (E e : c)
+            for (E e : c) {
                 add(e);
+            }
             return true;
         }
         return false;
@@ -128,8 +131,9 @@ public class MyArrayStack<E> extends MyAbstractCollection<E> implements SimpleSt
 
     @Override
     public boolean poll() {
-        if (isEmpty())
+        if (isEmpty()) {
             return false;
+        }
         removeLast();
         return true;
     }
@@ -143,18 +147,25 @@ public class MyArrayStack<E> extends MyAbstractCollection<E> implements SimpleSt
     @Override
     public E peek() {
         E e = null;
-        if (!isEmpty())
+        if (!isEmpty()) {
             e = removeLast();
+        }
         return e;
     }
 
     private int indexOf(Object o) {
         if (o == null) {
-            for (int i = 0; i < size; i++)
-                if (data[i] == null) return i;
+            for (int i = 0; i < size; i++) {
+                if (data[i] == null) {
+                    return i;
+                }
+            }
         } else {
-            for (int i = 0; i < size; i++)
-                if (o.equals(data[i])) return i;
+            for (int i = 0; i < size; i++) {
+                if (o.equals(data[i])) {
+                    return i;
+                }
+            }
         }
         return -1;
     }
@@ -216,6 +227,7 @@ public class MyArrayStack<E> extends MyAbstractCollection<E> implements SimpleSt
         public void remove() {
             throw new UnsupportedOperationException();
         }
+
     }
 
 }

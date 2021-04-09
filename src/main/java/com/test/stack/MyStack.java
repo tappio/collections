@@ -8,16 +8,6 @@ import com.test.MyAbstractCollection;
 
 public class MyStack<E> extends MyAbstractCollection<E> implements SimpleStack<E> {
 
-    private static class Node<E> {
-        E item;
-        Node<E> next;
-
-        Node(E item, Node<E> next) {
-            this.item = item;
-            this.next = next;
-        }
-    }
-
     private int size;
     private Node<E> head;
     private int maxSize = -1;
@@ -85,8 +75,9 @@ public class MyStack<E> extends MyAbstractCollection<E> implements SimpleStack<E
 
     @Override
     public boolean addAll(Collection<? extends E> c) {
-        if (c == null || c.isEmpty())
+        if (c == null || c.isEmpty()) {
             return false;
+        }
 
         if (c.size() > (maxSize - size)) {
             throw new IllegalStateException("No space available. Max size: " + maxSize);
@@ -128,8 +119,9 @@ public class MyStack<E> extends MyAbstractCollection<E> implements SimpleStack<E
 
     @Override
     public E pop() {
-        if (isEmpty())
+        if (isEmpty()) {
             throw new NoSuchElementException();
+        }
         return unlinkFirst();
     }
 
@@ -144,16 +136,18 @@ public class MyStack<E> extends MyAbstractCollection<E> implements SimpleStack<E
 
     @Override
     public boolean poll() {
-        if (isEmpty())
+        if (isEmpty()) {
             return false;
+        }
         unlinkFirst();
         return true;
     }
 
     @Override
     public E element() {
-        if (isEmpty())
+        if (isEmpty()) {
             throw new NoSuchElementException();
+        }
         E item = head.item;
         unlinkFirst();
         return item;
@@ -161,8 +155,9 @@ public class MyStack<E> extends MyAbstractCollection<E> implements SimpleStack<E
 
     @Override
     public E peek() {
-        if (isEmpty())
+        if (isEmpty()) {
             return null;
+        }
         E item = head.item;
         unlinkFirst();
         return item;
@@ -198,16 +193,30 @@ public class MyStack<E> extends MyAbstractCollection<E> implements SimpleStack<E
     private Node<E> nodeOf(Object o) {
         if (o == null) {
             for (Node<E> node = head; node != null; node = node.next) {
-                if (node.item == null)
+                if (node.item == null) {
                     return node;
+                }
             }
         } else {
             for (Node<E> node = head; node != null; node = node.next) {
-                if (o.equals(node.item))
+                if (o.equals(node.item)) {
                     return node;
+                }
             }
         }
         return null;
+    }
+
+    private static class Node<E> {
+
+        E item;
+        Node<E> next;
+
+        Node(E item, Node<E> next) {
+            this.item = item;
+            this.next = next;
+        }
+
     }
 
     private class MyStackIterator<E> implements Iterator<E> {
@@ -241,6 +250,7 @@ public class MyStack<E> extends MyAbstractCollection<E> implements SimpleStack<E
         public void remove() {
             throw new UnsupportedOperationException();
         }
+
     }
 
 }

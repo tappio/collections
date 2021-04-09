@@ -26,25 +26,6 @@ class MyDequeTest {
         deque = getDefaultDeque();
     }
 
-    private Deque<String> getDefaultDeque() {
-        Deque<String> result = new MyDeque<>();
-        fillWithDefaultData(result);
-        return result;
-    }
-
-    private void fillWithDefaultData(Deque<String> deque) {
-        deque.add("a");
-        deque.add("b");
-        deque.add("a");
-        deque.add("d");
-        deque.add("a");
-        deque.add(null);
-        deque.add("k");
-        deque.add("");
-        deque.add("s");
-        deque.add("z");
-    }
-
     @Test
     void testAddFirst() {
         int startSize = deque.size();
@@ -440,6 +421,25 @@ class MyDequeTest {
     @Test
     void testDescendingIterator() {
         assertThrows(UnsupportedOperationException.class, () -> deque.descendingIterator());
+    }
+
+    private Deque<String> getDefaultDeque() {
+        Deque<String> result = new MyDeque<>();
+        fillWithDefaultData(result);
+        return result;
+    }
+
+    private void fillWithDefaultData(Deque<String> deque) {
+        deque.add("a");
+        deque.add("b");
+        deque.add("a");
+        deque.add("d");
+        deque.add("a");
+        deque.add(null);
+        deque.add("k");
+        deque.add("");
+        deque.add("s");
+        deque.add("z");
     }
 
 }

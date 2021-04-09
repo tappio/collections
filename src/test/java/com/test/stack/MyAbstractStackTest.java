@@ -18,35 +18,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 abstract class MyAbstractStackTest {
 
+    private static final int MAX_SIZE = 12;
+
     private final String[] startArr = {"a", "b", "a", "d", "a", null, "k", "", "s", "z"};
     private SimpleStack<String> stack;
-    private static final int MAX_SIZE = 12;
 
     @BeforeEach
     void setUp() {
         stack = getDefaultStack();
     }
 
-    private SimpleStack<String> getDefaultStack() {
-        SimpleStack<String> result = initStack(MAX_SIZE);
-        fillWithDefaultData(result);
-        return result;
-    }
-
     protected abstract SimpleStack<String> initStack(int maxSize);
-
-    private void fillWithDefaultData(SimpleStack<String> stack) {
-        stack.add("z");
-        stack.add("s");
-        stack.add("");
-        stack.add("k");
-        stack.add(null);
-        stack.add("a");
-        stack.add("d");
-        stack.add("a");
-        stack.add("b");
-        stack.add("a");
-    }
 
     @Test
     void testSize() {
@@ -204,6 +186,25 @@ abstract class MyAbstractStackTest {
         assertEquals("a", stack.peek());
         stack.clear();
         assertNull(stack.peek());
+    }
+
+    private SimpleStack<String> getDefaultStack() {
+        SimpleStack<String> result = initStack(MAX_SIZE);
+        fillWithDefaultData(result);
+        return result;
+    }
+
+    private void fillWithDefaultData(SimpleStack<String> stack) {
+        stack.add("z");
+        stack.add("s");
+        stack.add("");
+        stack.add("k");
+        stack.add(null);
+        stack.add("a");
+        stack.add("d");
+        stack.add("a");
+        stack.add("b");
+        stack.add("a");
     }
 
 }

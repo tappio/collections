@@ -26,37 +26,6 @@ class MyQueueTest {
         queue = getDefaultQueue();
     }
 
-    private Queue<String> getDefaultQueue() {
-        Queue<String> result = new MyQueue<>();
-        fillWithDefaultData(result);
-        return result;
-    }
-
-    private void fillWithDefaultData(Queue<String> queue) {
-        queue.add("a");
-        queue.add("b");
-        queue.add("a");
-        queue.add("d");
-        queue.add("a");
-        queue.add(null);
-        queue.add("k");
-        queue.add("");
-        queue.add("s");
-        queue.add("z");
-    }
-
-    private void addElements(Queue<String> queue, int num) {
-        for (int i = 0; i < num; i++) {
-            queue.add(String.valueOf((char)i));
-        }
-    }
-
-    private void removeElements(Queue<String> queue, int num) {
-        for (int i = 0; i < num; i++) {
-            queue.poll();
-        }
-    }
-
     @Test
     void testSize() {
         assertEquals(10, queue.size());
@@ -264,6 +233,37 @@ class MyQueueTest {
         assertEquals("b", q.poll());
         assertTrue(q.isEmpty());
         assertNull(q.peek());
+    }
+
+    private Queue<String> getDefaultQueue() {
+        Queue<String> result = new MyQueue<>();
+        fillWithDefaultData(result);
+        return result;
+    }
+
+    private void fillWithDefaultData(Queue<String> queue) {
+        queue.add("a");
+        queue.add("b");
+        queue.add("a");
+        queue.add("d");
+        queue.add("a");
+        queue.add(null);
+        queue.add("k");
+        queue.add("");
+        queue.add("s");
+        queue.add("z");
+    }
+
+    private void addElements(Queue<String> queue, int num) {
+        for (int i = 0; i < num; i++) {
+            queue.add(String.valueOf((char) i));
+        }
+    }
+
+    private void removeElements(Queue<String> queue, int num) {
+        for (int i = 0; i < num; i++) {
+            queue.poll();
+        }
     }
 
 }

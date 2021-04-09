@@ -9,18 +9,6 @@ import com.test.MyAbstractCollection;
 
 public class MyDeque<E> extends MyAbstractCollection<E> implements Deque<E> {
 
-    private static class Node<E> {
-        Node<E> previous;
-        E item;
-        Node<E> next;
-
-        private Node(Node<E> previous, E item, Node<E> next) {
-            this.previous = previous;
-            this.item = item;
-            this.next = next;
-        }
-    }
-
     private int size;
     private Node<E> first;
     private Node<E> last;
@@ -49,8 +37,9 @@ public class MyDeque<E> extends MyAbstractCollection<E> implements Deque<E> {
 
     @Override
     public E removeFirst() {
-        if (isEmpty())
+        if (isEmpty()) {
             throw new NoSuchElementException();
+        }
         final E item = first.item;
         unlink(first);
         return item;
@@ -58,8 +47,9 @@ public class MyDeque<E> extends MyAbstractCollection<E> implements Deque<E> {
 
     @Override
     public E removeLast() {
-        if (isEmpty())
+        if (isEmpty()) {
             throw new NoSuchElementException();
+        }
         final E item = last.item;
         unlink(last);
         return item;
@@ -67,8 +57,9 @@ public class MyDeque<E> extends MyAbstractCollection<E> implements Deque<E> {
 
     @Override
     public E pollFirst() {
-        if (isEmpty())
+        if (isEmpty()) {
             return null;
+        }
         final E item = first.item;
         unlink(first);
         return item;
@@ -76,8 +67,9 @@ public class MyDeque<E> extends MyAbstractCollection<E> implements Deque<E> {
 
     @Override
     public E pollLast() {
-        if (isEmpty())
+        if (isEmpty()) {
             return null;
+        }
         final E item = last.item;
         unlink(last);
         return item;
@@ -85,37 +77,42 @@ public class MyDeque<E> extends MyAbstractCollection<E> implements Deque<E> {
 
     @Override
     public E getFirst() {
-        if (isEmpty())
+        if (isEmpty()) {
             throw new NoSuchElementException();
+        }
         return first.item;
     }
 
     @Override
     public E getLast() {
-        if (isEmpty())
+        if (isEmpty()) {
             throw new NoSuchElementException();
+        }
         return last.item;
     }
 
     @Override
     public E peekFirst() {
-        if (isEmpty())
+        if (isEmpty()) {
             return null;
+        }
         return first.item;
     }
 
     @Override
     public E peekLast() {
-        if (isEmpty())
+        if (isEmpty()) {
             return null;
+        }
         return last.item;
     }
 
     @Override
     public boolean removeFirstOccurrence(Object o) {
         Node<E> node = firstNodeOf(o);
-        if (node == null)
+        if (node == null) {
             return false;
+        }
         unlink(node);
         return true;
     }
@@ -123,15 +120,10 @@ public class MyDeque<E> extends MyAbstractCollection<E> implements Deque<E> {
     @Override
     public boolean removeLastOccurrence(Object o) {
         Node<E> node = lastNodeOf(o);
-        if (node == null)
+        if (node == null) {
             return false;
+        }
         unlink(node);
-        return true;
-    }
-
-    @Override
-    public boolean add(E e) {
-        addLast(e);
         return true;
     }
 
@@ -171,14 +163,67 @@ public class MyDeque<E> extends MyAbstractCollection<E> implements Deque<E> {
     }
 
     @Override
+    public Iterator<E> descendingIterator() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean contains(Object o) {
+        return firstNodeOf(o) != null;
+    }
+
+    @Override
+    public Iterator<E> iterator() {
+        return new MyDequeIterator<E>();
+    }
+
+    @Override
+    public Object[] toArray() {
+        final Object[] result = new Object[size];
+        int index = 0;
+        for (Node<E> current = first; current != null; current = current.next) {
+            result[index] = current.item;
+            index++;
+        }
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> T[] toArray(T[] a) {
+        if (a.length < size) {
+            return (T[]) toArray();
+        }
+
+        int index = 0;
+        for (Node<E> current = first; current != null; current = current.next) {
+            a[index] = (T) current.item;
+            index++;
+        }
+        return a;
+    }
+
+    @Override
+    public boolean add(E e) {
+        addLast(e);
+        return true;
+    }
+
+    @Override
     public boolean remove(Object o) {
         return removeFirstOccurrence(o);
     }
 
     @Override
     public boolean addAll(Collection<? extends E> c) {
-        if (c == null || c.isEmpty())
+        if (c == null || c.isEmpty()) {
             return false;
+        }
 
         boolean modified = false;
         for (E e : c) {
@@ -189,8 +234,9 @@ public class MyDeque<E> extends MyAbstractCollection<E> implements Deque<E> {
 
     @Override
     public boolean removeAll(Collection<?> c) {
-        if (c == null || c.isEmpty())
+        if (c == null || c.isEmpty()) {
             return false;
+        }
 
         boolean modified = false;
         for (Object o : c) {
@@ -206,8 +252,9 @@ public class MyDeque<E> extends MyAbstractCollection<E> implements Deque<E> {
     @SuppressWarnings("unchecked")
     @Override
     public boolean retainAll(Collection<?> c) {
-        if (c == null || c.isEmpty())
+        if (c == null || c.isEmpty()) {
             return false;
+        }
 
         Node<E> first = null;
         Node<E> last = null;
@@ -248,52 +295,6 @@ public class MyDeque<E> extends MyAbstractCollection<E> implements Deque<E> {
         first = null;
         last = null;
         size = 0;
-    }
-
-    @Override
-    public boolean contains(Object o) {
-        return firstNodeOf(o) != null;
-    }
-
-    @Override
-    public int size() {
-        return size;
-    }
-
-    @Override
-    public Iterator<E> iterator() {
-        return new MyDequeIterator<E>();
-    }
-
-    @Override
-    public Object[] toArray() {
-        final Object[] result = new Object[size];
-        int index = 0;
-        for (Node<E> current = first; current != null; current = current.next) {
-            result[index] = current.item;
-            index++;
-        }
-        return result;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public <T> T[] toArray(T[] a) {
-        if (a.length < size) {
-            return (T[]) toArray();
-        }
-
-        int index = 0;
-        for (Node<E> current = first; current != null; current = current.next) {
-            a[index] = (T) current.item;
-            index++;
-        }
-        return a;
-    }
-
-    @Override
-    public Iterator<E> descendingIterator() {
-        throw new UnsupportedOperationException();
     }
 
     private void linkFirst(E e) {
@@ -345,13 +346,15 @@ public class MyDeque<E> extends MyAbstractCollection<E> implements Deque<E> {
     private Node<E> firstNodeOf(Object o) {
         if (o == null) {
             for (Node<E> node = first; node != null; node = node.next) {
-                if (node.item == null)
+                if (node.item == null) {
                     return node;
+                }
             }
         } else {
             for (Node<E> node = first; node != null; node = node.next) {
-                if (o.equals(node.item))
+                if (o.equals(node.item)) {
                     return node;
+                }
             }
         }
         return null;
@@ -360,16 +363,32 @@ public class MyDeque<E> extends MyAbstractCollection<E> implements Deque<E> {
     private Node<E> lastNodeOf(Object o) {
         if (o == null) {
             for (Node<E> node = last; node != null; node = node.previous) {
-                if (node.item == null)
+                if (node.item == null) {
                     return node;
+                }
             }
         } else {
             for (Node<E> node = last; node != null; node = node.previous) {
-                if (o.equals(node.item))
+                if (o.equals(node.item)) {
                     return node;
+                }
             }
         }
         return null;
+    }
+
+    private static class Node<E> {
+
+        E item;
+        Node<E> next;
+        Node<E> previous;
+
+        private Node(Node<E> previous, E item, Node<E> next) {
+            this.previous = previous;
+            this.item = item;
+            this.next = next;
+        }
+
     }
 
     private class MyDequeIterator<E> implements Iterator<E> {
@@ -409,6 +428,7 @@ public class MyDeque<E> extends MyAbstractCollection<E> implements Deque<E> {
             MyDeque.this.unlink(lastReturned);
             lastReturned = null;
         }
+
     }
 
 }

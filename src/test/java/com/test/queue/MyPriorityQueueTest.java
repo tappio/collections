@@ -19,50 +19,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MyPriorityQueueTest {
 
-    private static class IntegerComparator implements Comparator<Integer> {
-        @Override
-        public int compare(Integer o1, Integer o2) {
-            return o1.compareTo(o2);
-        }
-    }
-
     private final Integer[] startArr = {100, 12, 10, 7, 5, 2, 0, -5, -23};
     private Queue<Integer> queue;
 
     @BeforeEach
     void setUp() {
         queue = getDefaultQueue();
-    }
-
-    private Queue<Integer> getDefaultQueue() {
-        Queue<Integer> result = new MyPriorityQueue<>(new IntegerComparator());
-        fillWithDefaultData(result);
-        return result;
-    }
-
-    private void fillWithDefaultData(Queue<Integer> queue) {
-        queue.add(10);
-        queue.add(5);
-        queue.add(2);
-        queue.add(7);
-        queue.add(100);
-        queue.add(12);
-        queue.add(-5);
-        queue.add(0);
-        queue.add(-23);
-    }
-
-    private void addElements(Queue<Integer> queue, int num) {
-        for (int i = 0; i < num; i++) {
-            int random = (int) Math.round(Math.random() * num);
-            queue.add(random);
-        }
-    }
-
-    private void removeElements(Queue queue, int num) {
-        for (int i = 0; i < num; i++) {
-            queue.poll();
-        }
     }
 
     @Test
@@ -263,6 +225,46 @@ class MyPriorityQueueTest {
         assertEquals(size - 1, queue.size());
         queue.clear();
         assertNull(queue.peek());
+    }
+
+    private Queue<Integer> getDefaultQueue() {
+        Queue<Integer> result = new MyPriorityQueue<>(new IntegerComparator());
+        fillWithDefaultData(result);
+        return result;
+    }
+
+    private void fillWithDefaultData(Queue<Integer> queue) {
+        queue.add(10);
+        queue.add(5);
+        queue.add(2);
+        queue.add(7);
+        queue.add(100);
+        queue.add(12);
+        queue.add(-5);
+        queue.add(0);
+        queue.add(-23);
+    }
+
+    private void addElements(Queue<Integer> queue, int num) {
+        for (int i = 0; i < num; i++) {
+            int random = (int) Math.round(Math.random() * num);
+            queue.add(random);
+        }
+    }
+
+    private void removeElements(Queue queue, int num) {
+        for (int i = 0; i < num; i++) {
+            queue.poll();
+        }
+    }
+
+    private static class IntegerComparator implements Comparator<Integer> {
+
+        @Override
+        public int compare(Integer o1, Integer o2) {
+            return o1.compareTo(o2);
+        }
+
     }
 
 }

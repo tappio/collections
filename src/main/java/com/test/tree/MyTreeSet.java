@@ -13,35 +13,26 @@ import com.test.MyAbstractCollection;
 
 public class MyTreeSet<E> extends MyAbstractCollection<E> implements Set<E> {
 
-    private static class Entry<E> {
-        E value;
-        Entry<E> left;
-        Entry<E> right;
-        Entry<E> parent;
-
-        public Entry(E value, Entry<E> parent) {
-            this.value = value;
-            this.parent = parent;
-        }
-    }
-
     private int size;
     private Entry<E> root;
 
     public List<E> levelOrderTraversal() {
         List<E> result = new ArrayList<>();
-        if (root == null)
+        if (root == null) {
             return result;
+        }
 
         Queue<Entry<E>> entryQueue = new LinkedList<>();
         entryQueue.offer(root);
         while (!entryQueue.isEmpty()) {
             Entry<E> first = entryQueue.poll();
             result.add(first.value);
-            if (first.left != null)
+            if (first.left != null) {
                 entryQueue.offer(first.left);
-            if (first.right != null)
+            }
+            if (first.right != null) {
                 entryQueue.offer(first.right);
+            }
         }
         return result;
     }
@@ -49,55 +40,31 @@ public class MyTreeSet<E> extends MyAbstractCollection<E> implements Set<E> {
     // Root (data) -> Left -> Right (DLR)
     public List<E> preOrderTraversal() {
         List<E> result = new ArrayList<>();
-        if (root == null)
+        if (root == null) {
             return result;
+        }
         preOrder(root, result);
         return result;
-    }
-
-    @SuppressWarnings("unchecked")
-    private static void preOrder(Entry entry, List result) {
-        if (entry == null)
-            return;
-        result.add(entry.value);
-        preOrder(entry.left, result);
-        preOrder(entry.right, result);
     }
 
     // Left -> Root (data) -> Right (LDR)
     public List<E> inOrderTraversal() {
         List<E> result = new ArrayList<>();
-        if (root == null)
+        if (root == null) {
             return result;
+        }
         inOrder(root, result);
         return result;
-    }
-
-    @SuppressWarnings("unchecked")
-    private static void inOrder(Entry entry, List result) {
-        if (entry == null)
-            return;
-        inOrder(entry.left, result);
-        result.add(entry.value);
-        inOrder(entry.right, result);
     }
 
     // Left -> Right -> Root (data) (LRD)
     public List<E> postOrderTraversal() {
         List<E> result = new ArrayList<>();
-        if (root == null)
+        if (root == null) {
             return result;
+        }
         postOrder(root, result);
         return result;
-    }
-
-    @SuppressWarnings("unchecked")
-    private static void postOrder(Entry entry, List result) {
-        if (entry == null)
-            return;
-        postOrder(entry.left, result);
-        postOrder(entry.right, result);
-        result.add(entry.value);
     }
 
     @Override
@@ -163,32 +130,34 @@ public class MyTreeSet<E> extends MyAbstractCollection<E> implements Set<E> {
         do {
             parent = base;
             comparisonResult = k.compareTo(base.value);
-            if (comparisonResult < 0)
+            if (comparisonResult < 0) {
                 base = base.left;
-            else if (comparisonResult > 0)
+            } else if (comparisonResult > 0) {
                 base = base.right;
-            else {
+            } else {
                 base.value = e;
                 return true;
             }
         } while (base != null);
 
-
         Entry<E> newEntry = new Entry<>(e, parent);
-        if (comparisonResult < 0)
+        if (comparisonResult < 0) {
             parent.left = newEntry;
-        else
+        } else {
             parent.right = newEntry;
+        }
         size++;
         return true;
     }
 
     @Override
     public boolean remove(Object o) {
-        if (o == null)
+        if (o == null) {
             throw new NullPointerException();
-        if (isEmpty())
+        }
+        if (isEmpty()) {
             return false;
+        }
 
         Entry<E> entry = searchForEntry(o);
         return deleteEntry(entry);
@@ -196,21 +165,41 @@ public class MyTreeSet<E> extends MyAbstractCollection<E> implements Set<E> {
 
     @Override
     public boolean addAll(Collection<? extends E> c) {
-        if (c == null || c.isEmpty())
+        if (c == null || c.isEmpty()) {
             return false;
+        }
 
         boolean modified = false;
         for (E e : c) {
             boolean added = add(e);
-            if (added) modified = true;
+            if (added) {
+                modified = true;
+            }
+        }
+        return modified;
+    }
+
+    @Override
+    public boolean removeAll(Collection<?> c) {
+        if (c == null || c.isEmpty()) {
+            return false;
+        }
+
+        boolean modified = false;
+        for (Object o : c) {
+            boolean removed = remove(o);
+            if (removed) {
+                modified = true;
+            }
         }
         return modified;
     }
 
     @Override
     public boolean retainAll(Collection<?> c) {
-        if (c == null || c.isEmpty())
+        if (c == null || c.isEmpty()) {
             return false;
+        }
 
         boolean modified = false;
         Iterator<E> iterator = iterator();
@@ -220,19 +209,6 @@ public class MyTreeSet<E> extends MyAbstractCollection<E> implements Set<E> {
                 iterator.remove();
                 modified = true;
             }
-        }
-        return modified;
-    }
-
-    @Override
-    public boolean removeAll(Collection<?> c) {
-        if (c == null || c.isEmpty())
-            return false;
-
-        boolean modified = false;
-        for (Object o : c) {
-            boolean removed = remove(o);
-            if (removed) modified = true;
         }
         return modified;
     }
@@ -250,11 +226,11 @@ public class MyTreeSet<E> extends MyAbstractCollection<E> implements Set<E> {
         Comparable<? super E> k = (Comparable<? super E>) o;
         do {
             comparisonResult = k.compareTo(current.value);
-            if (comparisonResult < 0)
+            if (comparisonResult < 0) {
                 current = current.left;
-            else if (comparisonResult > 0)
+            } else if (comparisonResult > 0) {
                 current = current.right;
-            else {
+            } else {
                 return current;
             }
         } while (current != null);
@@ -263,8 +239,9 @@ public class MyTreeSet<E> extends MyAbstractCollection<E> implements Set<E> {
     }
 
     private boolean deleteEntry(Entry entry) {
-        if (entry == null)
+        if (entry == null) {
             return false;
+        }
 
         Entry parent = entry.parent;
         Entry left = entry.left;
@@ -277,10 +254,11 @@ public class MyTreeSet<E> extends MyAbstractCollection<E> implements Set<E> {
                 clear();
                 return true;
             }
-            if (parent.left == entry)
+            if (parent.left == entry) {
                 parent.left = null;
-            else
+            } else {
                 parent.right = null;
+            }
             entry.parent = null;
             size--;
             return true;
@@ -299,20 +277,22 @@ public class MyTreeSet<E> extends MyAbstractCollection<E> implements Set<E> {
 
         // one child case
         if (left == null) {
-            if (parent.left == entry)
+            if (parent.left == entry) {
                 parent.left = right;
-            else
+            } else {
                 parent.right = right;
+            }
             entry.parent = null;
             entry.right = null;
             right.parent = parent;
             size--;
             return true;
         } else if (right == null) {
-            if (parent.left == entry)
+            if (parent.left == entry) {
                 parent.left = left;
-            else
+            } else {
                 parent.right = left;
+            }
             entry.parent = null;
             entry.left = null;
             left.parent = parent;
@@ -339,16 +319,6 @@ public class MyTreeSet<E> extends MyAbstractCollection<E> implements Set<E> {
         entry.value = maxValue;
     }
 
-    private static Entry findMinEntry(Entry root) {
-        Entry entry = root;
-        if (entry != null) {
-            while (entry.left != null) {
-                entry = entry.left;
-            }
-        }
-        return entry;
-    }
-
     private Entry findMaxEntry(Entry root) {
         Entry entry = root;
         if (entry != null) {
@@ -363,13 +333,54 @@ public class MyTreeSet<E> extends MyAbstractCollection<E> implements Set<E> {
         return findMinEntry(root);
     }
 
+    @SuppressWarnings("unchecked")
+    private static void preOrder(Entry entry, List result) {
+        if (entry == null) {
+            return;
+        }
+        result.add(entry.value);
+        preOrder(entry.left, result);
+        preOrder(entry.right, result);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void inOrder(Entry entry, List result) {
+        if (entry == null) {
+            return;
+        }
+        inOrder(entry.left, result);
+        result.add(entry.value);
+        inOrder(entry.right, result);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void postOrder(Entry entry, List result) {
+        if (entry == null) {
+            return;
+        }
+        postOrder(entry.left, result);
+        postOrder(entry.right, result);
+        result.add(entry.value);
+    }
+
+    private static Entry findMinEntry(Entry root) {
+        Entry entry = root;
+        if (entry != null) {
+            while (entry.left != null) {
+                entry = entry.left;
+            }
+        }
+        return entry;
+    }
+
     private static <E> Entry<E> successor(Entry<E> entry) {
-        if (entry == null)
+        if (entry == null) {
             return null;
-        else if (entry.right != null) {
+        } else if (entry.right != null) {
             Entry<E> current = entry.right;
-            while (current.left != null)
+            while (current.left != null) {
                 current = current.left;
+            }
             return current;
         } else {
             Entry<E> parent = entry.parent;
@@ -382,10 +393,24 @@ public class MyTreeSet<E> extends MyAbstractCollection<E> implements Set<E> {
         }
     }
 
+    private static class Entry<E> {
+
+        Entry<E> left;
+        Entry<E> parent;
+        Entry<E> right;
+        E value;
+
+        public Entry(E value, Entry<E> parent) {
+            this.value = value;
+            this.parent = parent;
+        }
+
+    }
+
     private class MyTreeSetIterator implements Iterator<E> {
 
-        Entry<E> next;
         Entry<E> lastReturned;
+        Entry<E> next;
 
         MyTreeSetIterator(Entry<E> first) {
             next = first;
@@ -400,8 +425,9 @@ public class MyTreeSet<E> extends MyAbstractCollection<E> implements Set<E> {
         @Override
         public E next() {
             Entry<E> entry = next;
-            if (entry == null)
+            if (entry == null) {
                 throw new NoSuchElementException();
+            }
             next = successor(entry);
             lastReturned = entry;
             return entry.value;
@@ -409,13 +435,16 @@ public class MyTreeSet<E> extends MyAbstractCollection<E> implements Set<E> {
 
         @Override
         public void remove() {
-            if (lastReturned == null)
+            if (lastReturned == null) {
                 throw new IllegalStateException();
-            if (lastReturned.left != null && lastReturned.right != null)
+            }
+            if (lastReturned.left != null && lastReturned.right != null) {
                 next = lastReturned;
+            }
             deleteEntry(lastReturned);
             lastReturned = null;
         }
+
     }
 
 }

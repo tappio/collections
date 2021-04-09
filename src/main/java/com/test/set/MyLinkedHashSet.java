@@ -11,8 +11,9 @@ import com.test.list.MyLinkedList;
 public class MyLinkedHashSet<E> extends MyAbstractCollection<E> implements Set<E> {
 
     private static final int DEFAULT_CAPACITY = 16;
-    private final Set<E> set;
+
     private final List<E> list;
+    private final Set<E> set;
 
     public MyLinkedHashSet(int capacity) {
         if (capacity < 1) {
@@ -108,8 +109,9 @@ public class MyLinkedHashSet<E> extends MyAbstractCollection<E> implements Set<E
     @SuppressWarnings("unchecked")
     @Override
     public boolean retainAll(Collection<?> c) {
-        if (c == null || c.isEmpty())
+        if (c == null || c.isEmpty()) {
             return false;
+        }
 
         Object[] result = new Object[set.size()];
         int index = 0;
@@ -160,6 +162,7 @@ public class MyLinkedHashSet<E> extends MyAbstractCollection<E> implements Set<E
             current = null;
             iterator.remove();
         }
+
     }
 
 }

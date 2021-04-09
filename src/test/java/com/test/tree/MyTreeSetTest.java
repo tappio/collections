@@ -25,39 +25,6 @@ class MyTreeSetTest {
         set = getDefaultSet();
     }
 
-    private Set<String> getDefaultSet() {
-        Set<String> set = new MyTreeSet<>();
-        fillWithDefaultData(set);
-        return set;
-    }
-
-    private MyTreeSet<String> getTraversalSet() {
-        MyTreeSet<String> stringSet = new MyTreeSet<>();
-        stringSet.addAll(TRAVERSAL_LIST);
-        return stringSet;
-    }
-
-    private void fillWithDefaultData(Set<String> set) {
-        set.add("s");
-        set.add("z");
-        set.add("a");
-        set.add("b");
-        set.add("a");
-        set.add("b");
-    }
-
-    private void addElements(Set<String> set, int num) {
-        for (int i = 0; i < num; i++) {
-            set.add(String.valueOf((char)i));
-        }
-    }
-
-    private void removeElements(Set<String> set, int num) {
-        for (int i = 0; i < num; i++) {
-            set.remove(String.valueOf((char) i));
-        }
-    }
-
     @Test
     void testLevelOrderTraversal() {
         System.out.println("LevelOrderTraversal");
@@ -232,6 +199,39 @@ class MyTreeSetTest {
         assertEquals(1, set.size());
         set.clear();
         assertEquals(0, set.size());
+    }
+
+    private Set<String> getDefaultSet() {
+        Set<String> set = new MyTreeSet<>();
+        fillWithDefaultData(set);
+        return set;
+    }
+
+    private MyTreeSet<String> getTraversalSet() {
+        MyTreeSet<String> stringSet = new MyTreeSet<>();
+        stringSet.addAll(TRAVERSAL_LIST);
+        return stringSet;
+    }
+
+    private void fillWithDefaultData(Set<String> set) {
+        set.add("s");
+        set.add("z");
+        set.add("a");
+        set.add("b");
+        set.add("a");
+        set.add("b");
+    }
+
+    private void addElements(Set<String> set, int num) {
+        for (int i = 0; i < num; i++) {
+            set.add(String.valueOf((char) i));
+        }
+    }
+
+    private void removeElements(Set<String> set, int num) {
+        for (int i = 0; i < num; i++) {
+            set.remove(String.valueOf((char) i));
+        }
     }
 
 }

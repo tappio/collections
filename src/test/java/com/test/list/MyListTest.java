@@ -27,37 +27,6 @@ abstract class MyListTest {
 
     protected abstract List<String> initList();
 
-    private List<String> getDefaultList() {
-        List<String> result = initList();
-        fillWithDefaultData(result);
-        return result;
-    }
-
-    private void fillWithDefaultData(List<String> list) {
-        list.add("a");
-        list.add("b");
-        list.add("a");
-        list.add("d");
-        list.add("a");
-        list.add(null);
-        list.add("k");
-        list.add("");
-        list.add("s");
-        list.add("z");
-    }
-
-    private void addElements(List<String> list, int num) {
-        for (int i = 0; i < num; i++) {
-            list.add(String.valueOf((char)i));
-        }
-    }
-
-    private void removeElements(List<String> list, int num) {
-        for (int i = 0; i < num; i++) {
-            list.remove(0);
-        }
-    }
-
     @Test
     void testSize() {
         assertEquals(10, list.size());
@@ -215,8 +184,8 @@ abstract class MyListTest {
 
     @Test
     void testGet() {
-       assertEquals("a", list.get(0));
-       assertEquals("z", list.get(9));
+        assertEquals("a", list.get(0));
+        assertEquals("z", list.get(9));
     }
 
     @Test
@@ -276,6 +245,37 @@ abstract class MyListTest {
     void testSubList() {
         List<String> strings = list.subList(0, 3);
         assertEquals(strings, Arrays.asList("a", "b", "a"));
+    }
+
+    private List<String> getDefaultList() {
+        List<String> result = initList();
+        fillWithDefaultData(result);
+        return result;
+    }
+
+    private void fillWithDefaultData(List<String> list) {
+        list.add("a");
+        list.add("b");
+        list.add("a");
+        list.add("d");
+        list.add("a");
+        list.add(null);
+        list.add("k");
+        list.add("");
+        list.add("s");
+        list.add("z");
+    }
+
+    private void addElements(List<String> list, int num) {
+        for (int i = 0; i < num; i++) {
+            list.add(String.valueOf((char) i));
+        }
+    }
+
+    private void removeElements(List<String> list, int num) {
+        for (int i = 0; i < num; i++) {
+            list.remove(0);
+        }
     }
 
 }

@@ -9,24 +9,13 @@ import com.test.MyAbstractCollection;
 
 public class MyQueue<E> extends MyAbstractCollection<E> implements Queue<E> {
 
-    private static class Node<E> {
-        Node<E> previous;
-        E item;
-        Node<E> next;
-
-        private Node(Node<E> previous, E item, Node<E> next) {
-            this.previous = previous;
-            this.item = item;
-            this.next = next;
-        }
-    }
-
     private int size;
     private Node<E> first;
     private Node<E> last;
     private int maxSize = -1;
 
-    public MyQueue() {}
+    public MyQueue() {
+    }
 
     public MyQueue(int maxSize) {
         if (maxSize < 1) {
@@ -85,8 +74,9 @@ public class MyQueue<E> extends MyAbstractCollection<E> implements Queue<E> {
 
     @Override
     public boolean remove(Object o) {
-        if (size == 0)
+        if (size == 0) {
             return false;
+        }
         Node<E> node = nodeOf(o);
         if (node != null) {
             unlink(node);
@@ -97,8 +87,9 @@ public class MyQueue<E> extends MyAbstractCollection<E> implements Queue<E> {
 
     @Override
     public boolean addAll(Collection<? extends E> c) {
-        if (c == null || c.isEmpty())
+        if (c == null || c.isEmpty()) {
             return false;
+        }
 
         boolean modified = false;
         for (E e : c) {
@@ -109,8 +100,9 @@ public class MyQueue<E> extends MyAbstractCollection<E> implements Queue<E> {
 
     @Override
     public boolean removeAll(Collection<?> c) {
-        if (c == null || c.isEmpty())
+        if (c == null || c.isEmpty()) {
             return false;
+        }
 
         boolean modified = false;
         for (Object o : c) {
@@ -126,8 +118,9 @@ public class MyQueue<E> extends MyAbstractCollection<E> implements Queue<E> {
     @SuppressWarnings("unchecked")
     @Override
     public boolean retainAll(Collection<?> c) {
-        if (c == null || c.isEmpty())
+        if (c == null || c.isEmpty()) {
             return false;
+        }
 
         Node<E> first = null;
         Node<E> last = null;
@@ -181,29 +174,33 @@ public class MyQueue<E> extends MyAbstractCollection<E> implements Queue<E> {
 
     @Override
     public E remove() {
-        if (size == 0)
+        if (size == 0) {
             throw new NoSuchElementException();
+        }
         return removeFirst();
     }
 
     @Override
     public E poll() {
-        if (size == 0)
+        if (size == 0) {
             return null;
+        }
         return removeFirst();
     }
 
     @Override
     public E element() {
-        if (size == 0)
+        if (size == 0) {
             throw new NoSuchElementException();
+        }
         return first.item;
     }
 
     @Override
     public E peek() {
-        if (size == 0)
+        if (size == 0) {
             return null;
+        }
         return first.item;
     }
 
@@ -260,16 +257,32 @@ public class MyQueue<E> extends MyAbstractCollection<E> implements Queue<E> {
     private Node<E> nodeOf(Object o) {
         if (o == null) {
             for (Node<E> node = first; node != null; node = node.next) {
-                if (node.item == null)
+                if (node.item == null) {
                     return node;
+                }
             }
         } else {
             for (Node<E> node = first; node != null; node = node.next) {
-                if (o.equals(node.item))
+                if (o.equals(node.item)) {
                     return node;
+                }
             }
         }
         return null;
+    }
+
+    private static class Node<E> {
+
+        E item;
+        Node<E> next;
+        Node<E> previous;
+
+        private Node(Node<E> previous, E item, Node<E> next) {
+            this.previous = previous;
+            this.item = item;
+            this.next = next;
+        }
+
     }
 
     private class MyQueueIterator<E> implements Iterator<E> {
@@ -309,6 +322,7 @@ public class MyQueue<E> extends MyAbstractCollection<E> implements Queue<E> {
             MyQueue.this.unlink(lastReturned);
             lastReturned = null;
         }
+
     }
 
 }

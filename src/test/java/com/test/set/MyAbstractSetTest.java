@@ -22,38 +22,7 @@ abstract class MyAbstractSetTest {
         set = getDefaultSet();
     }
 
-    private Set<String> getDefaultSet() {
-        Set<String> result = initSet();
-        fillWithDefaultData(result);
-        return result;
-    }
-
     protected abstract Set<String> initSet();
-
-    private void fillWithDefaultData(Set<String> set) {
-        set.add("a");
-        set.add("b");
-        set.add("a");
-        set.add("d");
-        set.add("a");
-        set.add(null);
-        set.add("k");
-        set.add("");
-        set.add("s");
-        set.add("z");
-    }
-
-    private void addElements(Set<String> set, int num) {
-        for (int i = 0; i < num; i++) {
-            set.add(String.valueOf((char)i));
-        }
-    }
-
-    private void removeElements(Set<String> set, int num) {
-        for (int i = 0; i < num; i++) {
-            set.remove(String.valueOf((char)i));
-        }
-    }
 
     @Test
     void testSize() {
@@ -208,6 +177,37 @@ abstract class MyAbstractSetTest {
         assertEquals(0, set.size());
         set.add("a");
         assertEquals(1, set.size());
+    }
+
+    private Set<String> getDefaultSet() {
+        Set<String> result = initSet();
+        fillWithDefaultData(result);
+        return result;
+    }
+
+    private void fillWithDefaultData(Set<String> set) {
+        set.add("a");
+        set.add("b");
+        set.add("a");
+        set.add("d");
+        set.add("a");
+        set.add(null);
+        set.add("k");
+        set.add("");
+        set.add("s");
+        set.add("z");
+    }
+
+    private void addElements(Set<String> set, int num) {
+        for (int i = 0; i < num; i++) {
+            set.add(String.valueOf((char) i));
+        }
+    }
+
+    private void removeElements(Set<String> set, int num) {
+        for (int i = 0; i < num; i++) {
+            set.remove(String.valueOf((char) i));
+        }
     }
 
 }
